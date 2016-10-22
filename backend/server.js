@@ -85,7 +85,8 @@ ref.on("value", function(snapshot) {
         console.log("getSnapshotFromDatabase error: " + errorObject.code);
     }
 });
-app.get("/shelters/:city", function(req, res) {
+app.get("/shelters/:zipcode", function(req, res) {
+  var url = "http://maps.googleapis.com/maps/api/geocode/json?address=" + req.params.zipcode + "&sensor=true";
   getSurroundingShelters(function(snapshot) {
     /*console.log("Callback: " + snapshot.val()[1].agency_address)
     console.log("Callback: " + JSON.stringify(snapshot.val()));*/
