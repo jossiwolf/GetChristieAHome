@@ -1,0 +1,13 @@
+{
+  "name": "gh6getchristieahome",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "private": "yes",
+  "repository": {
+    "type": "git",
+    "url": "github.com/jossiwolf/getchristieahome"
+  },
+  "author": "Jossi Wolf <jossiwolf@gmx.net>",
+  "license": "ISC"
+}
