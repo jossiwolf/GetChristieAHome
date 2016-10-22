@@ -61,8 +61,8 @@ function getDistanceToPoint(start, end) {
 
 getDistanceToPoint("38.632499, -90.227829", "N. 19th St. St. Louis, MO 63106");
 
-var getSurroundingShelters = function(callback, city) {
-  firebaseapp.database().ref("shelters/" + city).on("value", function(snapshot) {
+var getSurroundingShelters = function(callback, state, city) {
+  firebaseapp.database().ref("shelters/" + state + "/" + city).on("value", function(snapshot) {
       //console.log(snapshot.val()[1].agency_address);
       callback(snapshot);
   }, function(errorObject) {
@@ -85,13 +85,12 @@ ref.on("value", function(snapshot) {
         console.log("getSnapshotFromDatabase error: " + errorObject.code);
     }
 });
-app.get("/shelters/:zipcode", function(req, res) {
-  var url = "http://maps.googleapis.com/maps/api/geocode/json?address=" + req.params.zipcode + "&sensor=true";
+app.get("/shelters/:state/:city", function(req, res) {
   getSurroundingShelters(function(snapshot) {
     /*console.log("Callback: " + snapshot.val()[1].agency_address)
     console.log("Callback: " + JSON.stringify(snapshot.val()));*/
     res.json(snapshot.val());
-  }, req.params.city)
+  }, req.params.state, req.params.city)
 });
 
 app.post('/requestuber/:clientuuid', function(req, res) {
