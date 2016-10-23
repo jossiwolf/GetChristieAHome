@@ -352,7 +352,7 @@ app.get('/uber/callback', function(request, response) {
 app.get('/uber/login', function(req, res) {
     res.redirect(uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback'));
     console.log(req.get('host') + '/uber/callback')
-    console.log("Auth url for uber: " + uber.getAuthorizeUrl(['request'])
+    console.log("Auth url for uber: " + uber.getAuthorizeUrl(['request']))
         //res.redirect(uber.getAuthorizeUrl(['request'], req.get('host') + '/uber/callback'));
 });
 
