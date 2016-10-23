@@ -106,9 +106,6 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresp
         shelters = meetsrequierements(snapshot, userdata);
         console.log("")
         console.log("Conditions met by following shelters:")
-        var morestuff = function(acallback) {
-
-        }
         var preparedistancesarray = function(newcallback) {
             var distances = [];
             var completedcallbacks = 0
@@ -139,6 +136,7 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresp
                 doStuff(p);
                 p++
                 shelters = meetsrequierements(snapshot, userdata);
+                console.log(JSON.stringify(shelters))
                 if(shelters.length<1) {
                   doStuff(p)
                   p++
