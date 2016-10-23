@@ -118,7 +118,10 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresp
                 var objkeys = Object.keys(userdata);
                 var newuserdata = {};
 
-                
+                stuff()
+                if(shelters.length<1) {
+                  stuff();
+                }
 
                 function stuff() {
                   for (var l = 0; l <= objkeys.length - 1; l++) {
