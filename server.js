@@ -348,9 +348,8 @@ app.get('/requestride/:phonenumber', function(req, uberresponse) {
 
     var userdata = {}
 
-    var ref = firebaseapp.database().ref("newclients/" + req.params.phonenumber);
+    var ref = firebaseapp.database().ref("newclients/"+req.query.From.replace("+1", ""));
     ref.on("value", function(snapshot) {
-        //snapshot.val()[getRandom(0, snapshot.val().length)].firstName;
         if(snapshot.val().gender.toUpperCase() == "F") {
             userdata["capacity_women"] = {value: 0, type: "biggerThan"}
         } else if (snapshot.val().gender.toUpperCase() == "M") {
