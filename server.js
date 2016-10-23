@@ -129,7 +129,7 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresp
                   console.log(JSON.stringify(shelters))
                 }*/
 
-                keys = Object.keys(userdata);
+                /*keys = Object.keys(userdata);
 
                 function doStuff(i) {
                     console.log("Userdata before:" + JSON.stringify(userdata))
@@ -145,7 +145,8 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresp
                     doStuff(p)
                     p++
                 }
-                console.log(JSON.stringify(shelters))
+                console.log(JSON.stringify(shelters))*/
+                shelters = meetsrequierements(snapshot, {}); 
             }
             for (var g = 0; g < shelters.length; g++) {
                 console.log("g before callback: " + g)
