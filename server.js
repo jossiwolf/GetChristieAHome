@@ -188,7 +188,23 @@ function requestUber(distances, uberresponse, phonenumber) {
         } else {
             //console.log(res);
 
-            uber.requests.getCurrent(function(err, ucurrentres) {
+
+            var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
+            var authToken = '36fb064a34107f3705e8415005bee098';
+            //require the Twilio module and create a REST client
+            var tclient = require('twilio')(accountSid, authToken);
+            console.log("Tclient: " + phonenumber)
+            tclient.messages.create({
+                to: "+" + phonenumber, //"+13142240815",
+                from: "+16367357057",
+                body: "Your ShelterRide will arrive in about " + ucurrentres.pickup.eta + "mins",
+            }, function(err, message) {
+                //console.log(message.sid);
+                if (err) console.log(err)
+                uberresponse.json(message);
+            });
+
+            /*uber.requests.getCurrent(function(err, ucurrentres) {
                 if (!err) {
                     console.log("current uber data: " + JSON.stringify(ucurrentres))
                     var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
@@ -206,7 +222,7 @@ function requestUber(distances, uberresponse, phonenumber) {
                         uberresponse.json(message);
                     });
                 }
-            });
+            });*/
 
             //uberresponse.json(res)
             console.log("Ordered Uber!")
@@ -297,8 +313,9 @@ app.get('/sms/send', function(req, res) {
 GLOBAL.phonenumber = 0;
 
 app.get('/requestuber/login/:phonenumber', function(req, res) {
-  GLOBAL.phonenumber = req.params.phonenumber;
-  res.redirect(uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback'));
+    GLOBAL.phonenumber = req.params.phonenumber;
+    //res.redirect(uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback'));
+    res.send("<iframe src=" + uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback') + "></iframe>");
 });
 
 app.get('/requestuber/:phonenumber', function(req, uberresponse) {
