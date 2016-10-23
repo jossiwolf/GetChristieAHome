@@ -254,11 +254,11 @@ app.get('/requestride', function(req, uberresponse) {
                 });
                 return;
             } else {
-                var keys = Object.keys(snapshot.val().requierements);
-                for (var i = 0; i < keys.length; i++) { 
+                var keys = Object.keys(snapshot.val().requirements);
+                for (var i = 0; i < keys.length; i++) {
                     if (snapshot.val()[i] != null | snapshot.val()[i] != undefined) {
                         //userdata["require_id"] = snapshot.val().require_id;
-                        userdata[keys[i]] = snapshot.val().requierements[keys[i]];
+                        userdata[keys[i]] = snapshot.val().requirements[keys[i]];
                     }
                 }
                 console.log("Hello userdata: " + JSON.stringify(userdata))
