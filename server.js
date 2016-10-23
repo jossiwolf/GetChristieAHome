@@ -284,16 +284,16 @@ app.get('/requestride', function(req, uberresponse) {
                     userdata[keys[i]] = snapshot.val().requirements[keys[i]];
                 }
                 if (snapshot.val().gender.toUpperCase() == "F") {
-                    userdata["capacity_women"] = {
+                    /*userdata["capacity_women"] = {
                         value: 0,
                         type: "biggerThan"
-                    }
+                    }*/
                     findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""), snapshot.val().firstName);
                 } else if (snapshot.val().gender.toUpperCase() == "M") {
-                    userdata["capacity_men"] = {
+                    /*userdata["capacity_men"] = {
                         value: 0,
                         type: "biggerThan"
-                    }
+                    }*/
                     findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""), snapshot.val().firstName);
                 }
             }
