@@ -270,7 +270,7 @@ app.get('/sms/send', function(req, res) {
     tclient.messages.create({
         to: "+13142240815",
         from: "+16367357057 ",
-        body: "Your Uber is on the way",
+        body: "Your ShelterRide is on the way",
     }, function(err, message) {
         console.log(message.sid);
         if(!err) {
