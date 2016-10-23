@@ -26,6 +26,10 @@ var allowCrossDomain = function(req, res, next) {
 }
 app.use(allowCrossDomain);
 
+Array.min = function(array) {
+    return Math.min.apply(Math, array);
+};
+
 var firebaseapp = firebase.initializeApp({
     apiKey: ' AIzaSyAlfkqy1BWgPqMaeWVG3khQDpjiSbDhhbs',
     authDomain: 'https://get-christie-a-home.firebaseapp.com',
@@ -40,7 +44,7 @@ var publicConfig = {
 };
 var gmAPI = new GoogleMapsAPI(publicConfig);
 
-function getDistanceToPoint(start, end) {
+var getDistanceToPoint = function(callback, start, end, i) {
     var params = {
         origins: start,
         destinations: end,
@@ -50,27 +54,130 @@ function getDistanceToPoint(start, end) {
         language: 'en-GB'
     };
     gmAPI.distance(params, function(err, result) {
-        console.log(result);
+        //console.log(result.rows[0].elements[0]);
+        distance = result.rows[0].elements[0].distance.value;
+        callback(distance, i);
         var file = 'data.json'
         jsonfile.writeFile(file, result, function(err) {
-            err != "" ? false : console.error(err);
-        })
-        //return secondsToMinutes(result.rows[0].elements[0].duration_in_traffic.value);
+                err != "" ? false : console.error(err);
+            })
+            //return secondsToMinutes(result.rows[0].elements[0].duration_in_traffic.value);
     });
 }
 
-getDistanceToPoint("38.632499, -90.227829", "N. 19th St. St. Louis, MO 63106");
-
 var getSurroundingShelters = function(callback, state, city) {
-  firebaseapp.database().ref("shelters/" + state + "/" + city).on("value", function(snapshot) {
-      //console.log(snapshot.val()[1].agency_address);
-      callback(snapshot);
-  }, function(errorObject) {
-      if (LogErrors) {
-          console.log("getSnapshotFromDatabase error: " + errorObject.code);
-      }
-  });
+    firebaseapp.database().ref("shelters/" + state + "/" + city).on("value", function(snapshot) {
+        //console.log(snapshot.val()[1].agency_address);
+        callback(snapshot);
+    }, function(errorObject) {
+        if (LogErrors) {
+            console.log("getSnapshotFromDatabase error: " + errorObject.code);
+        }
+    });
 }
+
+var getSurroundingSheltersForUser = function(callback, state, city, userdata) {
+    databaseref = firebaseapp.database().ref("shelters/" + state + "/" + city);
+    databaseref.on("value", function(snapshot) {
+        //console.log(snapshot.val()[1].agency_address);
+        callback(snapshot);
+    }, function(errorObject) {
+        if (LogErrors) {
+            console.log("getSnapshotFromDatabase error: " + errorObject.code);
+        }
+    });
+}
+
+function getDistanceToShelter(start, end) {
+    getDistanceToPoint(function(distance) {
+        console.log(distance);
+    }, start, end);
+}
+
+
+var exampleuserdata = {
+    require_id: "no",
+    other_elig_requirement: "none"
+}
+
+function sortByKey(array, key) {
+    return array.sort(function(a, b) {
+        var x = a[key]; var y = b[key];
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
+}
+
+function findBestShelterAvailableBasedOnUserData(userdata, city, state) {
+    getSurroundingSheltersForUser(function(snapshot) {
+
+        jsonfile.writeFile('data.json', snapshot.val(), function(err) {
+            err != "" ? false : console.error(err);
+        })
+
+        shelters = meetsrequierements(snapshot, userdata);
+        console.log("")
+        console.log("Conditions met by following shelters:")
+        var morestuff = function(acallback) {
+
+        }
+        var preparedistancesarray = function(newcallback) {
+            var distances = [];
+            var completedcallbacks = 0
+            for (var g = 0; g < shelters.length; g++) {
+              console.log("g before callback: " + g)
+              console.log("shelters.length" + shelters.length)
+                getDistanceToPoint(function(distance, g) {
+                    completedcallbacks += 1;
+                    console.log("completedcallbacks: " + completedcallbacks)
+                    console.log("distance: " + distance);
+                    var newshelter = shelters[g];
+                    newshelter["exactdistance"] = distance;
+                    distances.push(newshelter);
+                    if (completedcallbacks == shelters.length) {
+                        newcallback(distances);
+                    }
+                }, "38.632499, -90.227829", shelters[g].agency_address, g);
+            }
+        }
+
+        preparedistancesarray(function(distances) {
+            sortByKey(distances, 'exactdistance')
+            console.log("HELLO")
+            console.log(distances)
+            console.log("Best shelter for given requirements: " + distances[0].agency_program_name);
+        })
+
+
+        //console.log(snapshot.val());
+    }, state, city, userdata)
+
+}
+
+function returnbestshelter(data) {
+  return data;
+}
+
+function meetsrequierements(snapshot, userdata) {
+    //Keys => the requirements
+    objkeys = Object.keys(userdata);
+    shelters = []
+    for (j = 0; j < snapshot.val().length; j++) {
+        var counter = 0;
+        var shelter = snapshot.val()[j];
+        dbsearch = {};
+        for (var k = 0; k < objkeys.length; k++) {
+            if (shelter[objkeys[k]] == userdata[objkeys[k]]) counter++;
+        }
+        if (counter == objkeys.length) {
+            shelters.push(shelter);
+        }
+    }
+    return shelters;
+}
+
+findBestShelterAvailableBasedOnUserData(exampleuserdata, "stlouis", "mo");
+//console.log("Best shelter for given requirements: " + findBestShelterAvailableBasedOnUserData(exampleuserdata, "stlouis", "mo").agency_program_name);
+
 
 
 var LogErrors = false;
@@ -86,11 +193,11 @@ ref.on("value", function(snapshot) {
     }
 });
 app.get("/shelters/:state/:city", function(req, res) {
-  getSurroundingShelters(function(snapshot) {
-    /*console.log("Callback: " + snapshot.val()[1].agency_address)
-    console.log("Callback: " + JSON.stringify(snapshot.val()));*/
-    res.json(snapshot.val());
-  }, req.params.state, req.params.city)
+    getSurroundingShelters(function(snapshot) {
+        /*console.log("Callback: " + snapshot.val()[1].agency_address)
+        console.log("Callback: " + JSON.stringify(snapshot.val()));*/
+        res.json(snapshot.val());
+    }, req.params.state, req.params.city)
 });
 
 app.post('/requestuber/:clientuuid', function(req, res) {
