@@ -116,7 +116,7 @@ function sortByKey(array, key) {
     });
 }
 
-function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresponse) {
+function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresponse, phonenumber) {
     getSurroundingSheltersForUser(function(snapshot) {
 
         jsonfile.writeFile('data.json', snapshot.val(), function(err) {
@@ -152,7 +152,7 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresp
 
         //preparedistancesarray(requestUber(distances));
         preparedistancesarray(function(distances) {
-            requestUber(distances, uberresponse)
+            requestUber(distances, uberresponse, phonenumber)
         })
 
 
@@ -165,19 +165,21 @@ function returnbestshelter(data) {
     return data;
 }
 
-function requestUber(distances, uberresponse) {
+function requestUber(distances, uberresponse, phonenumber) {
     sortByKey(distances, 'exactdistance')
     console.log("Best shelter for given requirements: " + distances[0].agency_program_name + ". Distance: " + distances[0].exactdistance + "km");
     console.log("Ordering Uber...")
         //uberresponse.send("Hallo")
     console.log(distances[0].latitude)
     console.log(parseFloat(distances[0].latitude))
+    var end_lat = parseFloat(distances[0].latitude);
+    var end_long = parseFloat(distances[0].longitude);
     uber.requests.create({
         "product_id": uberproduct,
         "start_latitude": 38.632499,
         "start_longitude": -90.227829,
-        "end_latitude": parseFloat(distances[0].latitude),
-        "end_longitude": parseFloat(distances[0].longitude)
+        "end_latitude": end_lat,
+        "end_longitude": end_long
     }, function(err, res) {
         if (err) {
             console.error(err);
@@ -186,22 +188,22 @@ function requestUber(distances, uberresponse) {
             //console.log(res);
 
             uber.requests.getCurrent(function(err, ucurrentres) {
-                if(!err) {
-                  console.log(JSON.stringify(ucurrentres))
-                  var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
-                  var authToken = '36fb064a34107f3705e8415005bee098';
-                  //require the Twilio module and create a REST client
-                  var tclient = require('twilio')(accountSid, authToken);
-                  tclient.messages.create({
-                      to: "+13142240815",
-                      from: "+16367357057 ",
-                      body: "Your ShelterRide is on the way!",
-                  }, function(err, message) {
-                      console.log(message.sid);
-                      if (!err) {
-                          res.json(message);
-                      }
-                  });
+                if (!err) {
+                    console.log(JSON.stringify(ucurrentres))
+                    var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
+                    var authToken = '36fb064a34107f3705e8415005bee098';
+                    //require the Twilio module and create a REST client
+                    var tclient = require('twilio')(accountSid, authToken);
+                    tclient.messages.create({
+                        to: "+" + phonenumber,     //"+13142240815",
+                        from: "+16367357057",
+                        body: "Your ShelterRide is on the way!",
+                    }, function(err, message) {
+                        console.log(message.sid);
+                        if (!err) {
+                            res.json(message);
+                        }
+                    });
                 }
             });
 
@@ -242,19 +244,6 @@ function meetsrequierements(snapshot, userdata) {
     return shelters;
 }
 
-var exampleuserdata = {
-    require_id: "no",
-    gender: 0,
-    other_elig_requirement: "none",
-    capacity: {
-        value: 0,
-        type: "biggerThan"
-    }
-}
-
-//findBestShelterAvailableBasedOnUserData(exampleuserdata, "stlouis", "mo");
-//console.log("Best shelter for given requirements: " + findBestShelterAvailableBasedOnUserData(exampleuserdata, "stlouis", "mo").agency_program_name);
-
 
 
 var LogErrors = false;
@@ -291,6 +280,7 @@ app.get('/sms/send', function(req, res) {
     var tclient = require('twilio')(accountSid, authToken);
 
     tclient.messages.create({
+        //to: "+13142240815",
         to: "+13142240815",
         from: "+16367357057 ",
         body: "Your ShelterRide is on the way",
@@ -303,8 +293,19 @@ app.get('/sms/send', function(req, res) {
 
 })
 
-app.get('/requestuber/', function(req, uberresponse) {
-    findBestShelterAvailableBasedOnUserData(exampleuserdata, "stlouis", "mo", uberresponse);
+app.get('/requestuber/:phonenumber', function(req, uberresponse) {
+
+    var exampleuserdata = {
+        require_id: "no",
+        gender: 0,
+        other_elig_requirement: "none",
+        capacity: {
+            value: 0,
+            type: "biggerThan"
+        }
+    }
+
+    findBestShelterAvailableBasedOnUserData(exampleuserdata, "stlouis", "mo", uberresponse, req.params.phonenumber);
 
 
     /*databaseref = firebaseapp.database().ref("shelters/" + state + "/" + city);
