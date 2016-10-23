@@ -169,7 +169,8 @@ function requestUber(distances, uberresponse) {
     sortByKey(distances, 'exactdistance')
     console.log("Best shelter for given requirements: " + distances[0].agency_program_name + ". Distance: " + distances[0].exactdistance + "km");
     console.log("Ordering Uber...")
-    uber.requests.create({
+    uberresponse.send("Hallo")
+    /*uber.requests.create({
         "product_id": uberproduct,
         "start_latitude": 38.632499,
         "start_longitude": -90.227829,
@@ -184,7 +185,7 @@ function requestUber(distances, uberresponse) {
             uberresponse.json(res)
             console.log("Ordered Uber!")
         }
-    });
+    });*/
 }
 
 function meetsrequierements(snapshot, userdata) {
