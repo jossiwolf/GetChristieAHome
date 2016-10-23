@@ -8,37 +8,281 @@
     <link type="text/css" rel="stylesheet" href="css/style.css">
 </head>
 
-<body ng-app="BlankApp">
+<body ng-app="HIMSapp">
 
     <div ng-controller="AppCtrl" class="tabsdemoDynamicHeight">
         <md-content>
             <md-tabs md-dynamic-height="" md-border-bottom="">
-                <md-tab label="one">
+                <md-tab label="Initial Registration">
                     <md-content class="md-padding">
-                        <h1 class="md-display-2">Tab One</h1>
-                        <p>{{test}}</p>
+                        <form name="catalystRepForm">
+                            <div id="userID" class="form-inline">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <md-input-container flex-gt-sm>
+                                            <label>First name</label>
+                                            <input ng-model="criticalUser.firstName" class="form-control">
+                                        </md-input-container>
+                                        <md-input-container flex-gt-sm>
+                                            <label>Last Name</label>
+                                            <input ng-model="criticalUser.lastName" class="form-control">
+                                        </md-input-container>
+                                    </div>
+                                    <div class="row">
+                                        <md-input-container flex-gt-sm>
+                                            <label>DOB:</label>
+                                            <input ng-model="criticalUser.DOB" class="form-control">
+                                        </md-input-container>
+                                        <md-input-container flex-gt-sm>
+                                            <label>Gender</label>
+                                            <input ng-model="criticalUser.gender" class="form-control">
+                                        </md-input-container>
+                                        <md-input-container flex-gt-sm>
+                                            <label>SSN:</label>
+                                            <input ng-model="criticalUser.SSN" class="form-control">
+                                        </md-input-container>
+                                    </div>
+                                    <div class="row">
+                                        <md-checkbox ng-model="criticalUser.ID" aria-label="Checkbox 1" ng-change="change()" class="md-warn md-align-top-left" flex>
+                                            YES I have a valid ID!<br/>
+                                        </md-checkbox>
+                                    </div>
+                                    <div class="row" id="idInfoRow" hidden>
+                                        <md-input-container>
+                                            <label>ID Type</label>
+                                            <md-select ng-model="criticalUser.IDtype">
+                                                <md-option><em>State ID</em></md-option>
+                                                <md-option><em>Drivers License</em></md-option>
+                                                <md-option><em>Passport</em></md-option>
+                                            </md-select>
+                                        </md-input-container>
+                                        <md-input-container>
+                                            <label>ID Number:</label>
+                                            <input ng-model="criticalUser.IDnum" class="form-control">
+                                        </md-input-container>
+                                    </div>
+
+                                    <div class="row">
+                                        <md-checkbox ng-model="criticalUser.spouse" aria-label="Checkbox 1" ng-change="changecb2()" class="md-warn md-align-top-left" flex>
+                                            YES I have a spouse/partner!<br/>
+                                        </md-checkbox>
+                                        <md-checkbox ng-model="criticalUser.children" aria-label="Checkbox 1" ng-change="changecb3()" class="md-warn md-align-top-left" flex>
+                                            YES I have children!<br/>
+                                        </md-checkbox>
+                                    </div>
+                                    <div class="row">
+                                        <md-checkbox ng-model="criticalUser.veteran" aria-label="Checkbox 1" ng-change="changecb4()" class="md-warn md-align-top-left" flex>
+                                            YES I am a veteran!<br/>
+                                        </md-checkbox>
+                                        <md-checkbox ng-model="criticalUser.lgbTolerant" aria-label="Checkbox 1" ng-change="changecb5()" class="md-warn md-align-top-left" flex>
+                                            YES I am LGBT Friendly!<br/>
+                                        </md-checkbox>
+                                        <md-checkbox ng-model="criticalUser.sober" aria-label="Checkbox 1" ng-change="changecb6()" class="md-warn md-align-top-left" flex>
+                                            YES I can pass a sobriety test!<br/>
+                                        </md-checkbox>
+                                    </div>
+                                    <div class="row">
+                                        <md-checkbox ng-model="criticalUser.hiv" aria-label="Checkbox 1" ng-change="changecb7()" class="md-warn md-align-top-left" flex>
+                                            YES I am HIV positive<br/>
+                                        </md-checkbox>
+                                        <md-checkbox ng-model="criticalUser.sexOffend" aria-label="Checkbox 1" ng-change="changecb8()" class="md-warn md-align-top-left" flex>
+                                            YES I am a convicted sex offender<br/>
+                                        </md-checkbox>
+                                    </div>
+                                </div>
+                            </div>
+                            <button ng-Click="wolfFunction()">Click me!</button>
+                        </form>
                     </md-content>
                 </md-tab>
-                <md-tab label="two">
+                <md-tab label="Catalyst Representative">
                     <md-content class="md-padding">
-                        <h1 class="md-display-2">Tab Two</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis ante augue. Phasellus volutpat neque ac dui mattis vulputate. Etiam consequat aliquam cursus. In sodales pretium ultrices. Maecenas lectus est, sollicitudin
-                            consectetur felis nec, feugiat ultricies mi. Aliquam erat volutpat. Nam placerat, tortor in ultrices porttitor, orci enim rutrum enim, vel tempor sapien arcu a tellus. Vivamus convallis sodales ante varius gravida. Curabitur
-                            a purus vel augue ultrices ultricies id a nisl. Nullam malesuada consequat diam, a facilisis tortor volutpat et. Sed urna dolor, aliquet vitae posuere vulputate, euismod ac lorem. Sed felis risus, pulvinar at interdum quis,
-                            vehicula sed odio. Phasellus in enim venenatis, iaculis tortor eu, bibendum ante. Donec ac tellus dictum neque volutpat blandit. Praesent efficitur faucibus risus, ac auctor purus porttitor vitae. Phasellus ornare dui nec orci
-                            posuere, nec luctus mauris semper.</p>
-                        <p>Morbi viverra, ante vel aliquet tincidunt, leo dolor pharetra quam, at semper massa orci nec magna. Donec posuere nec sapien sed laoreet. Etiam cursus nunc in condimentum facilisis. Etiam in tempor tortor. Vivamus faucibus egestas
-                            enim, at convallis diam pulvinar vel. Cras ac orci eget nisi maximus cursus. Nunc urna libero, viverra sit amet nisl at, hendrerit tempor turpis. Maecenas facilisis convallis mi vel tempor. Nullam vitae nunc leo. Cras sed nisl
-                            consectetur, rhoncus sapien sit amet, tempus sapien.</p>
-                        <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc.
-                            Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+                        <form name="catalystRepForm">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <md-input-container>
+                                            <lable>Organization Name</label>
+                                                <input ng-model="catalystRep.organizationName">
+                                        </md-input-container>
+                                        <md-input-container>
+                                            <label>Organization Type</label>
+                                            <md-select name="type" ng-model="catalystRep.organizationType" required>
+                                                <md-option value="police">Police</md-option>
+                                                <md-option value="swService">Social Work Service</md-option>
+                                                <md-option value="schoolCouns">School Counselor</md-option>
+                                        </md-input-container>
+                                    </div>
+                                    <div class="row">
+                                      <label>Current Location</label><br>
+                                        <md-input-container>
+                                            <label>Address</label>
+                                            <input ng-model="catalystRep.Address">
+                                        </md-input-container>
+                                    </div>
+                                    <div class="row">
+                                        <md-input-container class="md-block" flex-gt-sm>
+                                            <label>City</label>
+                                            <input ng-model="catalystRep.City">
+                                        </md-input-container>
+
+                                        <md-input-container class="md-block" flex-gt-sm>
+                                            <label>State</label>
+                                            <md-select ng-model="catalystRep.State">
+                                                <md-option ng-repeat="state in states" value="{{state.abbrev}}">
+                                                    {{state.abbrev}}
+                                                </md-option>
+                                            </md-select>
+                                        </md-input-container>
+
+                                        <md-input-container class="md-block" flex-gt-sm>
+                                            <label>Postal Code</label>
+                                            <input name="postalCode" ng-model="catalystRep.postalCode" placeholder="12345" required ng-pattern="/^[0-9]{5}$/" md-maxlength="5">
+                                            <div ng-messages="catalystRepForm.postalCode.$error" role="alert" multiple>
+                                                <div ng-message="required" class="my-message">You must supply a postal code.</div>
+                                                <div ng-message="pattern" class="my-message">That doesn't look like a valid postal code.</div>
+                                                <div ng-message="md-maxlength" class="my-message">Don't use the long version silly...we don't need to be that specific...</div>
+                                            </div>
+                                        </md-input-container>
+                                    </div>
+                                    <br>
+                                    <label>CatalystRep Information<label>
+                                    <br>
+                                    <div class="row">
+                                      <md-input-container  flex-gt-sm>
+                                        <label>First name</label>
+                                    <input ng-model="catalystRep.firstName" class="form-control">
+                                    </md-input-container>
+
+                                    <md-input-container flex-gt-sm>
+                                        <label>Last Name</label>
+                                        <input ng-model="catalystRep.lastName" class="form-control">
+                                    </md-input-container>
+
+                                    <md-input-container flex-gt-sm>
+                                        <label>Phone Number</label>
+                                        <input ng-model="catalystRep.stakeholderPhonephone" class="form-control">
+                                    </md-input-container>
+                                </div>
+
+                                <div class="row">
+                                  <md-input-container>
+                                      <label>Issued Phone#</label>
+                                      <input ng-model="issuedPhone">
+                                  </md-input-container>
+
+                                  <md-input-container>
+                                      <label>Enter date</label>
+                                      <md-datepicker ng-model="catalystRep.submissionDate"></md-datepicker>
+                                  </md-input-container>
+                                  <md-input-container>
+                                      <label>Total Beds Needed</label>
+                                      <input ng-model="catalystRep.bedsNeed"></input>
+                                  </md-input-container>
+                                </div>
+                                <div class="row">
+                                  <md-input-container class="md-block">
+                                      <label>Notes/Observations</label>
+                                      <textarea ng-model="catalystRep.notes" md-maxlength="150" rows="5" md-select-on-focus></textarea>
+                                  </md-input-container>
+                                </div>
+                            </div>
+                            </div>
+                            <button ng-Click="bearFunction()">Click me!</button>
+                        </form>
                     </md-content>
                 </md-tab>
-                <md-tab label="three">
+                <md-tab label="Intake Sheet">
                     <md-content class="md-padding">
-                        <h1 class="md-display-2">Tab Three</h1>
-                        <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc.
-                            Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+                        <form name="catalystRepForm">
+                            <div id="userID" class="form-inline">
+                                <div class="form-group">
+
+                                    <div class="row" id="work">
+                                        <md-input-container flex-gt-sm>
+                                            <label>Employer</label>
+                                            <input ng-model="criticalUser.employer" class="form-control">
+                                        </md-input-container>
+                                        <md-input-container flex-gt-sm>
+                                            <label>Employer Phone#</label>
+                                            <input ng-model="criticalUser.employerPhone" class="form-control">
+                                        </md-input-container>
+                                        <md-input-container flex-gt-sm>
+                                            <label>Supervisor</label>
+                                            <input ng-model="criticalUser.manager" class="form-control">
+                                        </md-input-container>
+                                    </div>
+
+                                    <div class="row" id="ice">
+                                        <md-input-container flex-gt-sm>
+                                            <label>Emergency Contact First Name</label>
+                                            <input ng-model="criticalUser.emergencyContactFirst" class="form-control">
+                                        </md-input-container>
+                                        <md-input-container flex-gt-sm>
+                                            <label>Emergency Contact Last Name</label>
+                                            <input ng-model="criticalUser.emergencyContactLast" class="form-control">
+                                        </md-input-container>
+                                        <md-input-container flex-gt-sm>
+                                            <label>Emergency Contact Phone#</label>
+                                            <input ng-model="criticalUser.emergencyPhone" class="form-control">
+                                        </md-input-container>
+                                    </div>
+
+                                    <div class="row" id="primaryMed">
+                                        <md-input-container flex-gt-sm>
+                                            <label>Primary Physician</label>
+                                            <input ng-model="criticalUser.primaryDoctor" class="form-control">
+                                        </md-input-container>
+                                        <md-input-container flex-gt-sm>
+                                            <label>Pharmacy:</label>
+                                            <input ng-model="criticalUser.pharmacy" class="form-control">
+                                        </md-input-container>
+                                    </div>
+
+                                    <div class="row" id="idInfoRow" hidden>
+                                        <md-input-container>
+                                            <label>ID Type</label>
+                                            <md-select ng-model="criticalUser.IDtype">
+                                                <md-option><em>State ID</em></md-option>
+                                                <md-option><em>Drivers License</em></md-option>
+                                                <md-option><em>Passport</em></md-option>
+                                            </md-select>
+                                        </md-input-container>
+                                        <md-input-container>
+                                            <label>ID Number:</label>
+                                            <input ng-model="criticalUser.IDnum" class="form-control">
+                                        </md-input-container>
+                                    </div>
+
+                                    <div class="row" id="insurance">
+                                      <md-input-container flex-gt-sm>
+                                          <label>Medical Insurance Company:</label>
+                                          <input ng-model="criticalUser.medInsCo" class="form-control">
+                                      </md-input-container>
+                                      <md-input-container flex-gt-sm>
+                                          <label>Policy #</label>
+                                          <input ng-model="criticalUser.medInsPol" class="form-control">
+                                      </md-input-container>
+                                    </div>
+
+                                    <div class="row" id="extras">
+                                      <md-input-container flex-gt-sm>
+                                          <label>Medical visits </label>
+                                          <input ng-model="criticalUser.medVisitsMonth" class="form-control">
+                                      </md-input-container>
+                                      <md-input-container flex-gt-sm>
+                                          <label>Social Services Used last Month:</label>
+                                          <input ng-model="criticalUser.serviceUseMonth" class="form-control">
+                                      </md-input-container>
+                                      <md-input-container flex-gt-sm>
+                                          <label>Frequency of meals</label>
+                                          <input ng-model="criticalUser.avgDailyMeals" class="form-control">
+                                      </md-input-container>
+                                    </div>
+                                </div>
+                            </div>
+                            <button ng-Click="wolfFunction()">Click me!</button>
+                        </form>
                     </md-content>
                 </md-tab>
             </md-tabs>
@@ -57,6 +301,19 @@
 
     <!-- Angular Material Library -->
     <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/3.4.1/firebase.js"></script>
+    <script>
+        // Initialize the Firebase SDK
+        var config = {
+            apiKey: 'AIzaSyAlfkqy1BWgPqMaeWVG3khQDpjiSbDhhbs',
+            authDomain: 'https://get-christie-a-home.firebaseapp.com',
+            databaseURL: 'https://get-christie-a-home.firebaseio.com/'
+        };
+        firebase.initializeApp(config);
+    </script>
+    <!-- AngularFire -->
+    <script src="https://cdn.firebase.com/libs/angularfire/2.0.2/angularfire.min.js"></script>
 
     <script src="js/main.js"></script>
 
