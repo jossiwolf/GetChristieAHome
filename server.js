@@ -165,17 +165,18 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresp
             }
         }
         preparedistancesarray(function(distances) {
-            requestUber(distances, uberresponse, phonenumber, firstName)
+            requestUber(distances, uberresponse, phonenumber, firstName, state, city)
         })
     }, state, city, userdata)
 
 }
 
-function returnbestshelter(data) {
-    return data;
-}
+function insertToFirebase(objecttobepushed, databaseRef) {
+        var newPostRef = databaseRef.push();
+        newPostRef.set(objecttobepushed);
+    }
 
-function requestUber(distances, uberresponse, phonenumber, firstName) {
+function requestUber(distances, uberresponse, phonenumber, firstName, city, state) {
     sortByKey(distances, 'exactdistance')
     console.log("Best shelter for given requirements: " + distances[0].agency_program_name + ". Distance: " + distances[0].exactdistance + "m");
 
@@ -192,9 +193,9 @@ function requestUber(distances, uberresponse, phonenumber, firstName) {
         //console.log(message.sid);
         if (err) console.log(err)
         if (!err) {
-            firebaseapp.auth().signInWithEmailAndPassword(email, password).then(function() {
-              firebaseapp.database().ref("shelters/")
-            })
+            firebaseapp.auth().signInWithEmailAndPassword("jossiwolf@gmx.net", "globalhack").then(function() {
+                insertToFirebase({occupancy}, firebaseapp.database().ref("shelters/" + state + "/" + city))
+            });
         }
     });
 }
