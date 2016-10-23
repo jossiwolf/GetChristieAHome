@@ -188,7 +188,7 @@ function requestUber(distances, uberresponse, phonenumber, firstName, city, stat
     tclient.messages.create({
         to: "+" + phonenumber, //"+13142240815",
         from: "+16367357057",
-        body: "Hey " + firstName + "! Your ShelterRide is on the way! It will bring you to " + distances[0].agency_program_name + ".",
+        body: "Hey " + firstName + "! Your ShelterRide is on the way! We will bring you to " + distances[0].agency_program_name + ".",
     }, function(err, message) {
         //console.log(message.sid);
         if (err) console.log(err)
@@ -199,7 +199,7 @@ function requestUber(distances, uberresponse, phonenumber, firstName, city, stat
                 }, firebaseapp.database().ref("shelters/" + state + "/" + city))
             });*/
             firebaseapp.database().ref("shelters/" + state + "/" + city).orderBy("agency_program_name").equalTo(distances[0].agency_program_name).update({
-              "occupancy" : distances[0].occupancy + 1
+              "occupancy" : 99
             });
             //firebaseapp.database().ref("newclients/" + req.query.From.replace("+1", "")).on("value", function(snapshot, err) {
         }
