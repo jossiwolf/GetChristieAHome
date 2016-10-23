@@ -332,7 +332,7 @@ app.get('/requestride/login/:phonenumber', function(req, res) {
     res.send("<iframe src=" + uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback') + "></iframe>");
 });
 
-app.get('/requestride/:phonenumber', function(req, uberresponse) {
+app.get('/requestride/', function(req, uberresponse) {
 
     console.log("Query data: " + req.query.From.replace("+1", ""));
 
