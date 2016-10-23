@@ -255,6 +255,7 @@ app.get('/requestride', function(req, uberresponse) {
                 return;
             } else {
                 var keys = Object.keys(snapshot.val().requirements);
+                console.log(JSON.stringify(keys));
                 for (var i = 0; i < keys.length; i++) {
                     if (snapshot.val()[i] != null | snapshot.val()[i] != undefined) {
                         //userdata["require_id"] = snapshot.val().require_id;
