@@ -358,7 +358,7 @@ app.get('/uber/login', function(req, res) {
 
 app.get('/uber/fakelogin', function(req, res) {
   //var url = uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback');
-  res.send("<script>window.open(uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback'))")
+  res.send("<script>window.open(" + uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback') + ", '_blank')")
 })
 
 app.get('/uber/products', function(request, response) {
