@@ -301,8 +301,7 @@ app.get('/requestuber/login/:phonenumber', function(req, res) {
 
 app.get('/requestuber/:phonenumber', function(req, uberresponse) {
 
-
-
+    console.log("THE REAL WAR ZONE BEGINS HERE: " + req.params.phonenumber)
 
     var exampleuserdata = {
         require_id: "no",
