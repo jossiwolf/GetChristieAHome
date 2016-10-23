@@ -146,7 +146,7 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresp
                     p++
                 }
                 console.log(JSON.stringify(shelters))*/
-                shelters = meetsrequierements(snapshot, {}); 
+                shelters = meetsrequierements(snapshot, {});
             }
             for (var g = 0; g < shelters.length; g++) {
                 console.log("g before callback: " + g)
@@ -187,7 +187,7 @@ function requestUber(distances, uberresponse, phonenumber, firstName) {
     tclient.messages.create({
         to: "+" + phonenumber, //"+13142240815",
         from: "+16367357057",
-        body: "Hey " + firstName + "! Your ShelterRide is on the way! ",
+        body: "Hey " + firstName + "! Your ShelterRide is on the way! It will bring you to " + distances[0].agency_program_name + ".",
     }, function(err, message) {
         //console.log(message.sid);
         if (err) console.log(err)
