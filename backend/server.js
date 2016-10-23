@@ -254,7 +254,7 @@ app.get("/shelters/:state/:city.kml", function(req, res) {
     console.log(req.params.city)
     getSurroundingShelters(function(snapshot) {
         res.set('Content-Type', 'application/vnd.google-earth.kml+xml');
-        res.json(coverter.genKML(snapshot.val()));
+        res.send(coverter.genKML(snapshot.val()));
     }, req.params.state, req.params.city)
 });
 
