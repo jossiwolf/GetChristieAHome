@@ -12,6 +12,7 @@ var sql = require('mssql');
 var GoogleMapsAPI = require('googlemaps');
 var jsonfile = require('jsonfile');
 var Uber = require('node-uber');
+var url = require('url');
 const coverter = require('./kmlConverter.js');
 
 app.use(morgan('dev')); // log every request to the console
@@ -306,6 +307,8 @@ app.get('/uber/callback', function(request, response) {
 
 app.get('/uber/login', function(req, res) {
     res.redirect(uber.getAuthorizeUrl(['request'], 'http://localhost:8080/uber/callback'));
+    console.log(req.get('host') + '/uber/callback')
+    //res.redirect(uber.getAuthorizeUrl(['request'], req.get('host') + '/uber/callback'));
 });
 
 app.get('/uber/products', function(request, response) {
