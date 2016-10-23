@@ -354,7 +354,27 @@ app.get('/requestride', function(req, uberresponse) {
     }
 
 
-    firebaseapp.database().ref("newclients/" + req.query.From.replace("+1", "")).on("value", function(snapshot) {
+    firebaseapp.database().ref("newclients/" + req.query.From.replace("+1", "")).on("value", function(snapshot, err) {
+      if(err) {
+        var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
+        var authToken = '36fb064a34107f3705e8415005bee098';
+
+        //require the Twilio module and create a REST client
+        var tclient = require('twilio')(accountSid, authToken);
+
+        tclient.messages.create({
+            //to: "+13142240815",
+            to: req.query.From,
+            from: "+16367357057 ",
+            body: "We couldn't find you in our databse. Please contact your social worker.",
+        }, function(err, message) {
+            console.log(message.sid);
+            if (!err) {
+                res.json(message);
+            }
+        });
+        return;
+      }
         if (snapshot.val().gender.toUpperCase() == "F") {
             userdata["capacity_women"] = {
                 value: 0,
