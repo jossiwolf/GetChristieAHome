@@ -334,7 +334,7 @@ app.get('/requestride/login/:phonenumber', function(req, res) {
 
 app.get('/requestride/:phonenumber', function(req, uberresponse) {
 
-    console.log("Query data: " + req.query.From);
+    console.log("Query data: " + req.query.From.replace("+1", ""));
 
     var exampleuserdata = {
         require_id: "no",
