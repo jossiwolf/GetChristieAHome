@@ -94,6 +94,7 @@ var getSurroundingSheltersForUser = function(callback, state, city, userdata) {
     databaseref = firebaseapp.database().ref("shelters/" + state + "/" + city);
     databaseref.on("value", function(snapshot) {
         //console.log(snapshot.val()[1].agency_address);
+        //console.log(JSON.stringify(snapshot.val()));
         callback(snapshot);
     }, function(errorObject) {
         if (LogErrors) {
@@ -257,7 +258,7 @@ app.get("/shelters/:state/:city.kml", function(req, res) {
     }, req.params.state, req.params.city)
 });
 
-app.get('/requestuber/', function(req, uberresponse) {
+app.get('/requestuber', function(req, uberresponse) {
     findBestShelterAvailableBasedOnUserData(exampleuserdata, "stlouis", "mo", uberresponse);
 
 
