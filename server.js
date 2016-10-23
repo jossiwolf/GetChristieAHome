@@ -273,6 +273,9 @@ app.get('/sms/send', function(req, res) {
         body: "Your Uber is on the way",
     }, function(err, message) {
         console.log(message.sid);
+        if(!err) {
+          res.json(message);
+        }
     });
 
 })
