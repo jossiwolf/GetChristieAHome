@@ -181,16 +181,16 @@ function meetsrequierements(snapshot, userdata) {
             if (typeof userdata[objkeys[k]] === 'object') {
                 switch (userdata[objkeys[k]].type) {
                     case 'biggerThan':
-                        if (shelter[objkeys[k]] < userdata[objkeys[k]].value) counter++;
+                        if (shelter[objkeys[k]] < userdata[objkeys[k]].value && shelter["occupancy"]-shelter["capacity"] >= 1) counter++;
                     case 'biggerEqualThan':
-                        if (shelter[objkeys[k]] <= userdata[objkeys[k]].value) counter++;
+                        if (shelter[objkeys[k]] <= userdata[objkeys[k]].value && shelter["occupancy"]-shelter["capacity"] >= 1) counter++;
                     case 'smallerThan':
-                        if (shelter[objkeys[k]] > userdata[objkeys[k]].value) counter++;
+                        if (shelter[objkeys[k]] > userdata[objkeys[k]].value && shelter["occupancy"]-shelter["capacity"] >= 1) counter++;
                     case 'smallerEqualThan':
-                        if (shelter[objkeys[k]] >= userdata[objkeys[k]].value) counter++;
+                        if (shelter[objkeys[k]] >= userdata[objkeys[k]].value && shelter["occupancy"]-shelter["capacity"] >= 1) counter++;
                 }
             } else if (typeof userdata[objkeys[k]] === 'string' | typeof userdata[objkeys[k]] === 'number') {
-                if (shelter[objkeys[k]] == userdata[objkeys[k]]) counter++;
+                if (shelter[objkeys[k]] == userdata[objkeys[k]] && shelter["occupancy"]-shelter["capacity"] >= 1) counter++;
             }
         }
         if (counter == objkeys.length) {
@@ -257,11 +257,8 @@ app.get('/requestride', function(req, uberresponse) {
                 var keys = Object.keys(snapshot.val().requirements);
                 console.log(JSON.stringify(keys));
                 for (var i = 0; i <= keys.length; i++) {
-                    console.log(keys[i])
-                    console.log(snapshot.val().requirements[keys[i]])
                     userdata[keys[i]] = snapshot.val().requirements[keys[i]];
                 }
-                console.log("Hello userdata: " + JSON.stringify(userdata))
                 if (snapshot.val().gender.toUpperCase() == "F") {
                     userdata["capacity_women"] = {
                         value: 0,
