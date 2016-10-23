@@ -189,7 +189,7 @@ function requestUber(distances, uberresponse, phonenumber) {
 
             uber.requests.getCurrent(function(err, ucurrentres) {
                 if (!err) {
-                    console.log(JSON.stringify(ucurrentres))
+                    console.log("current uber data: " + JSON.stringify(ucurrentres))
                     var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
                     var authToken = '36fb064a34107f3705e8415005bee098';
                     //require the Twilio module and create a REST client
@@ -199,7 +199,7 @@ function requestUber(distances, uberresponse, phonenumber) {
                         from: "+16367357057",
                         body: "Your ShelterRide is on the way!",
                     }, function(err, message) {
-                        console.log(message.sid);
+                        //console.log(message.sid);
                     });
                 }
             });
