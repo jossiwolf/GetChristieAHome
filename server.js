@@ -169,7 +169,7 @@ function requestUber(distances, uberresponse) {
     sortByKey(distances, 'exactdistance')
     console.log("Best shelter for given requirements: " + distances[0].agency_program_name + ". Distance: " + distances[0].exactdistance + "km");
     console.log("Ordering Uber...")
-    //uberresponse.send("Hallo")
+        //uberresponse.send("Hallo")
     uber.requests.create({
         "product_id": uberproduct,
         "start_latitude": 38.632499,
@@ -259,6 +259,24 @@ app.get("/shelters/:state/:city.kml", function(req, res) {
     }, req.params.state, req.params.city)
 });
 
+app.get('/sms/send', function(req, res) {
+    // Twilio Credentials
+    var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
+    var authToken = '36fb064a34107f3705e8415005bee098';
+
+    //require the Twilio module and create a REST client
+    var client = require('twilio')(accountSid, authToken);
+
+    client.messages.create({
+        to: "+13142240815",
+        from: "+16367357057 ",
+        body: "Your Uber is on the way",
+    }, function(err, message) {
+        console.log(message.sid);
+    });
+
+})
+
 app.get('/requestuber/', function(req, uberresponse) {
     findBestShelterAvailableBasedOnUserData(exampleuserdata, "stlouis", "mo", uberresponse);
 
@@ -310,7 +328,7 @@ app.get('/uber/callback', function(request, response) {
 app.get('/uber/login', function(req, res) {
     res.redirect(uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback'));
     console.log(req.get('host') + '/uber/callback')
-    //res.redirect(uber.getAuthorizeUrl(['request'], req.get('host') + '/uber/callback'));
+        //res.redirect(uber.getAuthorizeUrl(['request'], req.get('host') + '/uber/callback'));
 });
 
 app.get('/uber/products', function(request, response) {
