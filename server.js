@@ -332,7 +332,7 @@ app.get('/requestride/login/:phonenumber', function(req, res) {
     res.send("<iframe src=" + uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback') + "></iframe>");
 });
 
-app.get('/requestride/', function(req, uberresponse) {
+app.get('/requestride', function(req, uberresponse) {
 
     console.log("Query data: " + req.query.From.replace("+1", ""));
 
@@ -353,19 +353,21 @@ app.get('/requestride/', function(req, uberresponse) {
         }
     }
 
+
     firebaseapp.database().ref("newclients/" + req.query.From.replace("+1", "")).on("value", function(snapshot) {
         if (snapshot.val().gender.toUpperCase() == "F") {
             userdata["capacity_women"] = {
                 value: 0,
                 type: "biggerThan"
             }
+            findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+1", ""));
         } else if (snapshot.val().gender.toUpperCase() == "M") {
             userdata["capacity_men"] = {
                 value: 0,
                 type: "biggerThan"
             }
+            findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+1", ""));
         }
-        findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+1", ""));
     }, function(errorObject) {
         if (LogErrors) {
             console.log("getSnapshotFromDatabase error: " + errorObject.code);
