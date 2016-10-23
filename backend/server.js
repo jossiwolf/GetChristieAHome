@@ -211,12 +211,13 @@ ref.on("value", function(snapshot) {
         console.log("getSnapshotFromDatabase error: " + errorObject.code);
     }
 });
-app.get("/shelters/:state/:city", function(req, res) {
+app.get("/shelters/:state/:city.json", function(req, res) {
     getSurroundingShelters(function(snapshot) {
         res.json(snapshot.val());
     }, req.params.state, req.params.city)
 });
 app.get("/shelters/:state/:city.kml", function(req, res) {
+  console.log(req.params.city)
   getSurroundingShelters(function(snapshot) {
     res.json(coverter.genKML(snapshot.val()));
   }, req.params.state, req.params.city)
