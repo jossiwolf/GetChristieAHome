@@ -195,7 +195,7 @@ function requestUber(distances, uberresponse, phonenumber) {
                     //require the Twilio module and create a REST client
                     var tclient = require('twilio')(accountSid, authToken);
                     tclient.messages.create({
-                        to: "+" + phonenumber,     //"+13142240815",
+                        to: "+" + phonenumber, //"+13142240815",
                         from: "+16367357057",
                         body: "Your ShelterRide will arrive in about " + ucurrentres.pickup.eta + "mins",
                     }, function(err, message) {
@@ -353,12 +353,12 @@ app.get('/uber/login', function(req, res) {
     res.redirect(uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback'));
     console.log(req.get('host') + '/uber/callback')
     console.log("Auth url for uber: " + uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback'));
-        //res.redirect(uber.getAuthorizeUrl(['request'], req.get('host') + '/uber/callback'));
+    //res.redirect(uber.getAuthorizeUrl(['request'], req.get('host') + '/uber/callback'));
 });
 
 app.get('/uber/fakelogin', function(req, res) {
-  //var url = uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback');
-  res.send("<script>window.open('" + uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback') + "', '_blank')")
+    //var url = uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback');
+    res.send("<!DOCTYPE html> <html> <head> <title>Test</title> <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/> <script type='text/javascript'> function codeAddress() { window.open('" + uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback') + "' } window.onload = codeAddress; </script> </head> <body> </body> </html>")
 })
 
 app.get('/uber/products', function(request, response) {
