@@ -253,39 +253,11 @@ app.get("/shelters/:state/:city.kml", function(req, res) {
     }, req.params.state, req.params.city)
 });
 
-app.get('/sms/send', function(req, res) {
-    // Twilio Credentials
-    var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
-    var authToken = '36fb064a34107f3705e8415005bee098';
-
-    //require the Twilio module and create a REST client
-    var tclient = require('twilio')(accountSid, authToken);
-
-    tclient.messages.create({
-        //to: "+13142240815",
-        to: "+13142240815",
-        from: "+16367357057 ",
-        body: "Hey " + +"your ShelterRide is on the way",
-    }, function(err, message) {
-        console.log(message.sid);
-        if (!err) {
-            res.json(message);
-        }
-    });
-
-})
-
 GLOBAL.phonenumber = 0;
 
 function getRandom(min, max) {
     return Math.random() * (max - min) + min;
 }
-
-app.get('/requestride/login/:phonenumber', function(req, res) {
-    GLOBAL.phonenumber = req.params.phonenumber;
-    //res.redirect(uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback'));
-    res.send("<iframe src=" + uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback') + "></iframe>");
-});
 
 app.get('/requestride', function(req, uberresponse) {
 
@@ -308,45 +280,64 @@ app.get('/requestride', function(req, uberresponse) {
         }
     }
 
+    if (req.query.Body.toLowerCase() == "pickmeup" | req.query.Body.toLowerCase() == "pick me up") {
+        firebaseapp.database().ref("newclients/" + req.query.From.replace("+1", "")).on("value", function(snapshot, err) {
+            if (snapshot.val() == null) {
+                var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
+                var authToken = '36fb064a34107f3705e8415005bee098';
 
-    firebaseapp.database().ref("newclients/" + req.query.From.replace("+1", "")).on("value", function(snapshot, err) {
-        if (snapshot.val() == null) {
-            var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
-            var authToken = '36fb064a34107f3705e8415005bee098';
+                //require the Twilio module and create a REST client
+                var tclient = require('twilio')(accountSid, authToken);
 
-            //require the Twilio module and create a REST client
-            var tclient = require('twilio')(accountSid, authToken);
-
-            tclient.messages.create({
-                //to: "+13142240815",
-                to: req.query.From,
-                from: "+16367357057 ",
-                body: "We couldn't find you in our databse. Please contact your social worker.",
-            }, function(err, message) {
-                if (!err) {
-                    console.log(message.sid);
+                tclient.messages.create({
+                    //to: "+13142240815",
+                    to: req.query.From,
+                    from: "+16367357057 ",
+                    body: "We couldn't find you in our databse. Please contact your social worker.",
+                }, function(err, message) {
+                    if (!err) {
+                        console.log(message.sid);
+                    }
+                });
+                return;
+            }
+            if (snapshot.val().gender.toUpperCase() == "F") {
+                userdata["capacity_women"] = {
+                    value: 0,
+                    type: "biggerThan"
                 }
-            });
-            return;
-        }
-        if (snapshot.val().gender.toUpperCase() == "F") {
-            userdata["capacity_women"] = {
-                value: 0,
-                type: "biggerThan"
+                findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""), snapshot.val().firstName);
+            } else if (snapshot.val().gender.toUpperCase() == "M") {
+                userdata["capacity_men"] = {
+                    value: 0,
+                    type: "biggerThan"
+                }
+                findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""), snapshot.val().firstName);
             }
-            findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""), snapshot.val().firstName);
-        } else if (snapshot.val().gender.toUpperCase() == "M") {
-            userdata["capacity_men"] = {
-                value: 0,
-                type: "biggerThan"
+        }, function(errorObject) {
+            if (LogErrors) {
+                console.log("getSnapshotFromDatabase error: " + errorObject.code);
             }
-            findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""), snapshot.val().firstName);
-        }
-    }, function(errorObject) {
-        if (LogErrors) {
-            console.log("getSnapshotFromDatabase error: " + errorObject.code);
-        }
-    });
+        });
+    } else {
+      var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
+      var authToken = '36fb064a34107f3705e8415005bee098';
+
+      //require the Twilio module and create a REST client
+      var tclient = require('twilio')(accountSid, authToken);
+
+      tclient.messages.create({
+          //to: "+13142240815",
+          to: req.query.From,
+          from: "+16367357057 ",
+          body: "Command not recognized. To get picked up, send the message 'pickmeup' (without quotes).",
+      }, function(err, message) {
+          if (!err) {
+              console.log(message.sid);
+          }
+      });
+      return;
+    }
 
 
     /*databaseref = firebaseapp.database().ref("shelters/" + state + "/" + city);
