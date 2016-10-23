@@ -55,6 +55,8 @@ var publicConfig = {
 };
 var gmAPI = new GoogleMapsAPI(publicConfig);
 
+var uberproduct = "98ecfda2-a228-4f1f-8d1e-2f85b8fa466d";
+
 var getDistanceToPoint = function(callback, start, end, i) {
     var params = {
         origins: start,
@@ -113,7 +115,7 @@ function sortByKey(array, key) {
     });
 }
 
-function findBestShelterAvailableBasedOnUserData(userdata, city, state) {
+function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresponse) {
     getSurroundingSheltersForUser(function(snapshot) {
 
         jsonfile.writeFile('data.json', snapshot.val(), function(err) {
@@ -146,11 +148,10 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state) {
             }
         }
 
+
+        //preparedistancesarray(requestUber(distances));
         preparedistancesarray(function(distances) {
-            sortByKey(distances, 'exactdistance')
-            console.log("HELLO")
-            console.log(distances)
-            console.log("Best shelter for given requirements: " + distances[0].agency_program_name) + ". Distance: " + distances[0].exactdistance + "km";
+            requestUber(distances, uberresponse)
         })
 
 
@@ -161,6 +162,28 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state) {
 
 function returnbestshelter(data) {
     return data;
+}
+
+function requestUber(distances, uberresponse) {
+    sortByKey(distances, 'exactdistance')
+    console.log("Best shelter for given requirements: " + distances[0].agency_program_name + ". Distance: " + distances[0].exactdistance + "km");
+    console.log("Ordering Uber...")
+    uber.requests.create({
+        "product_id": uberproduct,
+        "start_latitude": 38.632499,
+        "start_longitude": -90.227829,
+        "end_latitude": parseInt(distances[0].latitude),
+        "end_longitude": parseInt(distances[0].longitude)
+    }, function(err, res) {
+        if (err) {
+            console.error(err);
+            console.log(res.body)
+        } else {
+            //console.log(res);
+            uberresponse.json(res)
+            console.log("Ordered Uber!")
+        }
+    });
 }
 
 function meetsrequierements(snapshot, userdata) {
@@ -204,7 +227,7 @@ var exampleuserdata = {
     }
 }
 
-findBestShelterAvailableBasedOnUserData(exampleuserdata, "stlouis", "mo");
+//findBestShelterAvailableBasedOnUserData(exampleuserdata, "stlouis", "mo");
 //console.log("Best shelter for given requirements: " + findBestShelterAvailableBasedOnUserData(exampleuserdata, "stlouis", "mo").agency_program_name);
 
 
@@ -233,31 +256,64 @@ app.get("/shelters/:state/:city.kml", function(req, res) {
     }, req.params.state, req.params.city)
 });
 
-app.post('/requestuber/:clientuuid', function(req, res) {
-    console.log(req.body);
-    console.log(req.params.clientuuid);
-    res.json({
-        "test": req.params.clientuuid
-    });
+app.get('/requestuber/', function(req, uberresponse) {
+    findBestShelterAvailableBasedOnUserData(exampleuserdata, "stlouis", "mo", uberresponse);
+
+
+    /*databaseref = firebaseapp.database().ref("shelters/" + state + "/" + city);
+    databaseref.on("value", function(snapshot) {
+        //console.log(snapshot.val()[1].agency_address);
+        uber.requests.create({
+            "product_id": uberproduct,
+            "start_latitude": 38.632499,
+            "start_longitude": -90.227829,
+            "end_latitude": parseInt(snapshot.val()[0].latitude),
+            "end_longitude": parseInt(snapshot.val()[0].longitude)
+        }, function(err, res) {
+            if (err) {
+              console.error(err);
+              console.log(res.body)
+            } else {
+              //console.log(res);
+              uberresponse.json(res)
+            }
+        });
+    }, function(errorObject) {
+        if (LogErrors) {
+            console.log("getSnapshotFromDatabase error: " + errorObject.code);
+        }
+    });*/
 });
+
+
+
+//NEEDED FOR THE UBER API
 
 app.get('/uber/callback', function(request, response) {
     uber.authorization({
-      authorization_code: request.query.code
+        authorization_code: request.query.code
     }, function(err, access_token, refresh_token) {
-      if (err) {
-        console.error(err);
-      } else {
-        // store the user id and associated access token
-        // redirect the user back to your actual app
-        //response.redirect('/web/index.html');
-        response.send(access_token)
-      }
+        if (err) {
+            console.error(err);
+        } else {
+            // store the user id and associated access token
+            // redirect the user back to your actual app
+            //response.redirect('/web/index.html');
+            response.send(access_token)
+        }
     });
 });
 
 app.get('/uber/login', function(req, res) {
     res.redirect(uber.getAuthorizeUrl(['request'], 'http://localhost:8080/uber/callback'));
+});
+
+app.get('/uber/products', function(request, response) {
+    // extract the query from the request URL
+    uber.products.getAllForLocation(38.632499, -90.227829, function(err, res) {
+        if (err) console.error(err);
+        else response.json(res)
+    });
 });
 
 app.listen(8080);
