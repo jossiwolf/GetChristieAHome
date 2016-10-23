@@ -37,7 +37,7 @@ var uber = new Uber({
     client_id: 'YroEvS_bNpOPyz3W9SvqF3UcC9sBmLa3',
     client_secret: 'IZeYd38VexEvw_a6Mtivd2MfOvPh6goK-NxYLbBp',
     server_token: 'HY2MtwwMSd0a60X6EB4laJqVtLI1aS5sKYgZjdAP',
-    redirect_uri: 'http://localhost:8080/uber/callback',
+    redirect_uri: 'https://getchristieahome.herokuapp.com/uber/callback',
     name: 'GetChristieAHome',
     sandbox: true // optional, defaults to false
 });
@@ -306,7 +306,7 @@ app.get('/uber/callback', function(request, response) {
 });
 
 app.get('/uber/login', function(req, res) {
-    res.redirect(uber.getAuthorizeUrl(['request'], 'http://localhost:8080/uber/callback'));
+    res.redirect(uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback'));
     console.log(req.get('host') + '/uber/callback')
     //res.redirect(uber.getAuthorizeUrl(['request'], req.get('host') + '/uber/callback'));
 });
