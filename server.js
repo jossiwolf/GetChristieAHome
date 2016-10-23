@@ -199,7 +199,7 @@ function requestUber(distances, uberresponse, phonenumber, firstName, city, stat
                 }, firebaseapp.database().ref("shelters/" + state + "/" + city))
             });*/
             firebaseapp.database().ref("shelters/" + state + "/" + city).orderBy("agency_program_name").equalTo(distances[0].agency_program_name).update({
-              "occupancy" : distances[0].occupancy
+              "occupancy" : distances[0].occupancy + 1
             });
             //firebaseapp.database().ref("newclients/" + req.query.From.replace("+1", "")).on("value", function(snapshot, err) {
         }
