@@ -204,7 +204,7 @@ function requestUber(distances, uberresponse, phonenumber) {
                 }
             });
 
-            uberresponse.json(res)
+            //uberresponse.json(res)
             console.log("Ordered Uber!")
         }
     });
@@ -291,6 +291,8 @@ app.get('/sms/send', function(req, res) {
 })
 
 app.get('/requestuber/:phonenumber', function(req, uberresponse) {
+
+    res.send("<!DOCTYPE html> <html> <head> <title>Test</title> <meta http-equiv='Content-Type' content='text/html; charset=utf-8' /> <script type='text/javascript' charset='UTF-8'></script> <script type='text/javascript'> function codeAddress() { window.open('https://login.uber.com/oauth/authorize?response_type=code&redirect_uri=https%3A%2F%2Fgetchristieahome.herokuapp.com%2Fuber%2Fcallback&scope=request&client_id=YroEvS_bNpOPyz3W9SvqF3UcC9sBmLa3', '_blank'); } window.onload = codeAddress; </script> </head> <body> </body> </html>")
 
     var exampleuserdata = {
         require_id: "no",
