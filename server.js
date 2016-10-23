@@ -14,7 +14,7 @@ var jsonfile = require('jsonfile');
 var Uber = require('node-uber');
 var url = require('url');
 const coverter = require('./kmlConverter.js');
-var sleep = require('sleep');
+var wait = require('wait.for');
 
 app.use(morgan('dev')); // log every request to the console
 app.use(bodyParser.json()); // to support JSON-encoded bodies
@@ -291,11 +291,17 @@ app.get('/sms/send', function(req, res) {
 
 })
 
+var phonenumber;
+
+app.get('/requestuber/login/:phonenumber', function(req, res) {
+  phonenumber = req.params.phonenumber;
+  res.redirect(uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback'));
+});
+
 app.get('/requestuber/:phonenumber', function(req, uberresponse) {
 
-    uberresponse.send("<!DOCTYPE html> <html> <head> <title>Test</title> <meta http-equiv='Content-Type' content='text/html; charset=utf-8' /> <script type='text/javascript' charset='UTF-8'></script> <script type='text/javascript'> function codeAddress() { window.open('https://login.uber.com/oauth/authorize?response_type=code&redirect_uri=https%3A%2F%2Fgetchristieahome.herokuapp.com%2Fuber%2Fcallback&scope=request&client_id=YroEvS_bNpOPyz3W9SvqF3UcC9sBmLa3', '_blank'); } window.onload = codeAddress; </script> </head> <body> </body> </html>")
 
-    sleep.sleep(5);
+
 
     var exampleuserdata = {
         require_id: "no",
@@ -349,7 +355,8 @@ app.get('/uber/callback', function(request, response) {
             // store the user id and associated access token
             // redirect the user back to your actual app
             //response.redirect('/web/index.html');
-            response.send(access_token)
+            //response.send(access_token)
+            response.redirect('/requestuber/' + phonenumber)
         }
     });
 });
