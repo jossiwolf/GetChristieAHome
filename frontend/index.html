@@ -18,6 +18,13 @@
                         <form name="catalystRepForm">
                             <div id="userID" class="form-inline">
                                 <div class="form-group">
+                                  <div class="row">
+                                      <md-input-container flex-gt-sm>
+                                          <label>Issued Phone Number</label>
+                                          <input ng-model="criticalUser.issuedPhone" class="form-control">
+                                      </md-input-container>
+                                      <button ng-click="registerClient();"> Register </button>
+                                  </div>
                                     <div class="row">
                                         <md-input-container flex-gt-sm>
                                             <label>First name</label>
@@ -188,7 +195,7 @@
                                 </div>
                             </div>
                             </div>
-                            <button ng-Click="bearFunction()">Click me!</button>
+                            <button ng-Click="catalystRepUpdate()">Click me!</button>
                         </form>
                     </md-content>
                 </md-tab>
@@ -197,6 +204,24 @@
                         <form name="catalystRepForm">
                             <div id="userID" class="form-inline">
                                 <div class="form-group">
+
+                                  <div class="row" id="work">
+                                    <md-input-container>
+                                        <label>Service Center</label>
+                                        <md-select name="type" ng-model="catalystRep.organizationType" required onchange="fetchServiceCenter()">
+                                            <md-option value="0">12th And Park Shelter</md-option>
+                                            <md-option value="1">Gateway 180</md-option>
+                                            <md-option value="2">Loaves And Fishes Inc</md-option>
+                                            <md-option value="3">Our Lady's Inn</md-option>
+                                            <md-option value="4">Peter And Paul</md-option>
+                                            <md-option value="5">Room at The Inn</md-option>
+                                            <md-option value="6">Saint Patrick Center- Women's Night</md-option>
+                                            <md-option value="7">Salvation Army Family Haven</md-option>
+                                    </md-input-container>
+                                    <md-input-container>
+                                    </md-input-container>
+                                    <button ng-click="admitClient();"> Admit </button>
+                                  </div>
 
                                     <div class="row" id="work">
                                         <md-input-container flex-gt-sm>
@@ -281,7 +306,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button ng-Click="wolfFunction()">Click me!</button>
+                            <md-button class="btn1" ng-Click="registerClient()">Click me!</md-button>
                         </form>
                     </md-content>
                 </md-tab>

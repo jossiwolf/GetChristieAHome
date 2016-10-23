@@ -2,11 +2,12 @@ angular.module('HIMSapp', ['ngMaterial', 'ngMessages', 'material.svgAssetsCache'
 
 function AppCtrl($scope) {
     $scope.criticalUser = {
-        firstName: 'Not Initialized',
-        lastName: 'Not Initialized',
-        DOB: 'MM/DD/YEAR',
-        gender: 'Not Initialized',
-        SSN: 'Not Initialized',
+        firstName: 'Jane',
+        lastName: 'Doe',
+        DOB: '10/12/1998',
+        gender: 'Female',
+        SSN: '000-00-0000',
+        issuedPhone: '',
         ID: '',
         IDtype: '',
         IDnum: '',
@@ -48,6 +49,14 @@ function AppCtrl($scope) {
         notes: 'Report Not Sent',
         bedsNeed: '',
     }
+
+    $scope.shelter = {
+        id: '',
+        agency_program_name: '',
+        agency_address: '',
+        capacity: '',
+        occupancy: ''
+    }
     $scope.states = ('AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS ' +
         'MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI ' +
         'WY').split(' ').map(function(state) {
@@ -73,25 +82,37 @@ function AppCtrl($scope) {
         var errorCode = error.code;
         var errorMessage = error.message;
     });
+    //$scope.fetchServiceCenter();
 
-    $scope.wolfFunction = function() {
+    $scope.fetchServiceCenter = function() {
+        var databaseref = firebase.database().ref("shelters/mo/stlouis/"+$scope.shelter.id);
+           databaseref.once("value", function(snapshot) {
+           $scope.shelter = snapshot.val()
+        });
+    }
+
+    $scope.admitClient = function() {
+        alert('Client Admitted Successfully!');
+    }
+
+    $scope.registerClient = function() {
         //alert('Hello World'+$scope.criticalUser);
         var keys = Object.keys($scope.criticalUser)
         for (var i = 0; i < keys.length; i++) {
             //console.log(keys[i])
             //console.log($scope.criticalUser[keys[i]])
         }
-        insertToFirebase($scope.criticalUser, firebase.database().ref('newclients/77777'))
+        insertToFirebase($scope.criticalUser, firebase.database().ref('newclients/'+$scope.criticalUser.issuedPhone))
     }
 
-    $scope.bearFunction = function() {
+    $scope.catalystRepUpdate = function() {
         //alert('Hello World'+$scope.criticalUser);
         var keys = Object.keys($scope.catalystRep)
         for (var i = 0; i < keys.length; i++) {
             //console.log(keys[i])
             //console.log($scope.criticalUser[keys[i]])
         }
-        insertToFirebase($scope.catalystRep, firebase.database().ref('newclients/77777'))
+        insertToFirebase($scope.catalystRep, firebase.database().ref('newclients/'+$scope.catalystRep.issuedPhone))
     }
 
     $scope.change = function() {
