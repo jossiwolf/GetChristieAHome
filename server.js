@@ -355,7 +355,7 @@ app.get('/requestride', function(req, uberresponse) {
 
 
     firebaseapp.database().ref("newclients/" + req.query.From.replace("+1", "")).on("value", function(snapshot, err) {
-      if(err) {
+      if(snapshot.val().length==0) {
         var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
         var authToken = '36fb064a34107f3705e8415005bee098';
 
