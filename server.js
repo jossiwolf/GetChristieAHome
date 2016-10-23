@@ -11,10 +11,8 @@ var lodash = require('lodash');
 var sql = require('mssql');
 var GoogleMapsAPI = require('googlemaps');
 var jsonfile = require('jsonfile');
-var Uber = require('node-uber');
 var url = require('url');
 const coverter = require('./kmlConverter.js');
-var wait = require('wait.for');
 
 app.use(morgan('dev')); // log every request to the console
 app.use(bodyParser.json()); // to support JSON-encoded bodies
@@ -33,15 +31,6 @@ app.use(allowCrossDomain);
 Array.min = function(array) {
     return Math.min.apply(Math, array);
 };
-
-var uber = new Uber({
-    client_id: 'YroEvS_bNpOPyz3W9SvqF3UcC9sBmLa3',
-    client_secret: 'IZeYd38VexEvw_a6Mtivd2MfOvPh6goK-NxYLbBp',
-    server_token: 'HY2MtwwMSd0a60X6EB4laJqVtLI1aS5sKYgZjdAP',
-    redirect_uri: 'https://getchristieahome.herokuapp.com/uber/callback',
-    name: 'GetChristieAHome',
-    sandbox: true // optional, defaults to false
-});
 
 var firebaseapp = firebase.initializeApp({
     apiKey: ' AIzaSyAlfkqy1BWgPqMaeWVG3khQDpjiSbDhhbs',
@@ -72,17 +61,19 @@ var getDistanceToPoint = function(callback, start, end, i) {
         //console.log(result.rows[0].elements[0]);
         distance = result.rows[0].elements[0].distance.value;
         callback(distance, i);
-        var file = 'data.json'
-        jsonfile.writeFile(file, result, function(err) {
-                err != "" ? false : console.error(err);
-            })
-            //return secondsToMinutes(result.rows[0].elements[0].duration_in_traffic.value);
+    });
+}
+
+function sortByKey(array, key) {
+    return array.sort(function(a, b) {
+        var x = a[key];
+        var y = b[key];
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
 }
 
 var getSurroundingShelters = function(callback, state, city) {
     firebaseapp.database().ref("shelters/" + state + "/" + city).on("value", function(snapshot) {
-        //console.log(snapshot.val()[1].agency_address);
         callback(snapshot);
     }, function(errorObject) {
         if (LogErrors) {
@@ -109,20 +100,8 @@ function getDistanceToShelter(start, end) {
     }, start, end);
 }
 
-function sortByKey(array, key) {
-    return array.sort(function(a, b) {
-        var x = a[key];
-        var y = b[key];
-        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-    });
-}
-
 function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresponse, phonenumber, firstName) {
     getSurroundingSheltersForUser(function(snapshot) {
-
-        jsonfile.writeFile('data.json', snapshot.val(), function(err) {
-            err != "" ? false : console.error(err);
-        })
 
         shelters = meetsrequierements(snapshot, userdata);
         console.log("")
@@ -134,12 +113,15 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresp
             var distances = [];
             var completedcallbacks = 0
             if (shelters.length < 1) {
-                shelters = meetsrequierements(snapshot, {
-                    capacity: {
-                        value: 0,
-                        type: "biggerThan"
+                //if there are no shelter available that meet the persons requirements
+                var objkeys = Object.keys(userdata);
+                var newuserdata = {};
+                while (shelters.length < 1) {
+                    for (var l = 0; l <= objkeys.length - 1; l++) {
+                        newuserdata[objkeys[l]] = userdata[l]
                     }
-                })
+                    shelters = meetsrequierements(snapshot, newuserdata);
+                }
             }
             for (var g = 0; g < shelters.length; g++) {
                 console.log("g before callback: " + g)
@@ -157,15 +139,9 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresp
                 }, "38.632499, -90.227829", shelters[g].agency_address, g);
             }
         }
-
-
-        //preparedistancesarray(requestUber(distances));
         preparedistancesarray(function(distances) {
             requestUber(distances, uberresponse, phonenumber, firstName)
         })
-
-
-        //console.log(snapshot.val());
     }, state, city, userdata)
 
 }
@@ -224,21 +200,9 @@ function meetsrequierements(snapshot, userdata) {
     return shelters;
 }
 
-
-
-var LogErrors = false;
-var ref = firebaseapp.database().ref("shelters");
-ref.on("value", function(snapshot) {
-    //console.log(snapshot.val()[1].agency_address);
-    for (var i = 0; i < snapshot.val().length; i++) {
-        console.log(snapshot.val()[i].agency_program_name + ":" + snapshot.val()[i].agency_address);
-    }
-}, function(errorObject) {
-    if (LogErrors) {
-        console.log("getSnapshotFromDatabase error: " + errorObject.code);
-    }
-});
-
+function getRandom(min, max) {
+    return Math.random() * (max - min) + min;
+}
 
 app.get("/shelters/:state/:city.json", function(req, res) {
     getSurroundingShelters(function(snapshot) {
@@ -252,12 +216,6 @@ app.get("/shelters/:state/:city.kml", function(req, res) {
         res.send(coverter.genKML(snapshot.val()));
     }, req.params.state, req.params.city)
 });
-
-GLOBAL.phonenumber = 0;
-
-function getRandom(min, max) {
-    return Math.random() * (max - min) + min;
-}
 
 app.get('/requestride', function(req, uberresponse) {
 
@@ -320,91 +278,25 @@ app.get('/requestride', function(req, uberresponse) {
             }
         });
     } else {
-      var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
-      var authToken = '36fb064a34107f3705e8415005bee098';
+        var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
+        var authToken = '36fb064a34107f3705e8415005bee098';
 
-      //require the Twilio module and create a REST client
-      var tclient = require('twilio')(accountSid, authToken);
+        //require the Twilio module and create a REST client
+        var tclient = require('twilio')(accountSid, authToken);
 
-      tclient.messages.create({
-          //to: "+13142240815",
-          to: req.query.From,
-          from: "+16367357057 ",
-          body: "Command not recognized. To get picked up, send the message 'pickmeup' (without quotes).",
-      }, function(err, message) {
-          if (!err) {
-              console.log(message.sid);
-          }
-      });
-      return;
-    }
-
-
-    /*databaseref = firebaseapp.database().ref("shelters/" + state + "/" + city);
-    databaseref.on("value", function(snapshot) {
-        //console.log(snapshot.val()[1].agency_address);
-        uber.requests.create({
-            "product_id": uberproduct,
-            "start_latitude": 38.632499,
-            "start_longitude": -90.227829,
-            "end_latitude": parseInt(snapshot.val()[0].latitude),
-            "end_longitude": parseInt(snapshot.val()[0].longitude)
-        }, function(err, res) {
-            if (err) {
-              console.error(err);
-              console.log(res.body)
-            } else {
-              //console.log(res);
-              uberresponse.json(res)
+        tclient.messages.create({
+            //to: "+13142240815",
+            to: req.query.From,
+            from: "+16367357057 ",
+            body: "Command not recognized. To get picked up, send the message 'pickmeup' (without quotes).",
+        }, function(err, message) {
+            if (!err) {
+                console.log(message.sid);
             }
         });
-    }, function(errorObject) {
-        if (LogErrors) {
-            console.log("getSnapshotFromDatabase error: " + errorObject.code);
-        }
-    });*/
+        return;
+    }
+
 });
-
-
-
-//NEEDED FOR THE UBER API
-
-app.get('/uber/callback', function(request, response) {
-    uber.authorization({
-        authorization_code: request.query.code
-    }, function(err, access_token, refresh_token) {
-        if (err) {
-            console.error(err);
-        } else {
-            // store the user id and associated access token
-            // redirect the user back to your actual app
-            //response.redirect('/web/index.html');
-            //response.send(access_token)
-            response.redirect('/requestuber/' + GLOBAL.phonenumber)
-        }
-    });
-});
-
-app.get('/uber/login', function(req, res) {
-    res.redirect(uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback'));
-    console.log(req.get('host') + '/uber/callback')
-    console.log("Auth url for uber: " + uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback'));
-    //res.redirect(uber.getAuthorizeUrl(['request'], req.get('host') + '/uber/callback'));
-});
-
-app.get('/uber/fakelogin', function(req, res) {
-    //var url = uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback');
-    res.send("<!DOCTYPE html> <html> <head> <title>Test</title> <meta http-equiv='Content-Type' content='text/html; charset=utf-8' /> <script type='text/javascript' charset='UTF-8'></script> <script type='text/javascript'> function codeAddress() { window.open('https://login.uber.com/oauth/authorize?response_type=code&redirect_uri=https%3A%2F%2Fgetchristieahome.herokuapp.com%2Fuber%2Fcallback&scope=request&client_id=YroEvS_bNpOPyz3W9SvqF3UcC9sBmLa3', '_blank'); } window.onload = codeAddress; </script> </head> <body> </body> </html>")
-})
-
-app.get('/uber/products', function(request, response) {
-    // extract the query from the request URL
-    uber.products.getAllForLocation(38.632499, -90.227829, function(err, res) {
-        if (err) console.error(err);
-        else response.json(res)
-    });
-});
-
-//app.listen(5000);
 app.listen(process.env.PORT)
 console.log("App listening on port " + process.env.PORT);
