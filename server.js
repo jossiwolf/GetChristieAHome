@@ -130,18 +130,18 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresp
                 }*/
 
                 function doStuff(i) {
-                    console.log("Userdata before": JSON.stringify(userdata))
+                    console.log("Userdata before:" + JSON.stringify(userdata))
                     delete userdata[Object.keys(userdata)[i]];
-                    console.log("Userdata after": JSON.stringify(userdata))
+                    console.log("Userdata after:" + JSON.stringify(userdata))
                 }
                 var p = 0;
                 doStuff(p);
                 p++
                 shelters = meetsrequierements(snapshot, userdata);
                 console.log(JSON.stringify(shelters))
-                if(shelters.length<1) {
-                  doStuff(p)
-                  p++
+                if (shelters.length < 1) {
+                    doStuff(p)
+                    p++
                 }
                 console.log(JSON.stringify(shelters))
             }
@@ -203,16 +203,16 @@ function meetsrequierements(snapshot, userdata) {
             if (typeof userdata[objkeys[k]] === 'object') {
                 switch (userdata[objkeys[k]].type) {
                     case 'biggerThan':
-                        if (shelter[objkeys[k]] < userdata[objkeys[k]].value && shelter["occupancy"]-shelter["capacity"] >= 1) counter++;
+                        if (shelter[objkeys[k]] < userdata[objkeys[k]].value && shelter["occupancy"] - shelter["capacity"] >= 1) counter++;
                     case 'biggerEqualThan':
-                        if (shelter[objkeys[k]] <= userdata[objkeys[k]].value && shelter["occupancy"]-shelter["capacity"] >= 1) counter++;
+                        if (shelter[objkeys[k]] <= userdata[objkeys[k]].value && shelter["occupancy"] - shelter["capacity"] >= 1) counter++;
                     case 'smallerThan':
-                        if (shelter[objkeys[k]] > userdata[objkeys[k]].value && shelter["occupancy"]-shelter["capacity"] >= 1) counter++;
+                        if (shelter[objkeys[k]] > userdata[objkeys[k]].value && shelter["occupancy"] - shelter["capacity"] >= 1) counter++;
                     case 'smallerEqualThan':
-                        if (shelter[objkeys[k]] >= userdata[objkeys[k]].value && shelter["occupancy"]-shelter["capacity"] >= 1) counter++;
+                        if (shelter[objkeys[k]] >= userdata[objkeys[k]].value && shelter["occupancy"] - shelter["capacity"] >= 1) counter++;
                 }
             } else if (typeof userdata[objkeys[k]] === 'string' | typeof userdata[objkeys[k]] === 'number') {
-                if (shelter[objkeys[k]] == userdata[objkeys[k]] && shelter["occupancy"]-shelter["capacity"] >= 1) counter++;
+                if (shelter[objkeys[k]] == userdata[objkeys[k]] && shelter["occupancy"] - shelter["capacity"] >= 1) counter++;
             }
         }
         if (counter == objkeys.length) {
