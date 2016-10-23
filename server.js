@@ -231,12 +231,7 @@ app.get('/requestride', function(req, uberresponse) {
         }
     }
 
-    var userdata = {
-        capacity: {
-            value: 0,
-            type: "biggerThan"
-        }
-    }
+    var userdata = {}
 
     if (req.query.Body.toLowerCase() == "pickmeup" | req.query.Body.toLowerCase() == "pick me up") {
         firebaseapp.database().ref("newclients/" + req.query.From.replace("+1", "")).on("value", function(snapshot, err) {
@@ -258,19 +253,28 @@ app.get('/requestride', function(req, uberresponse) {
                     }
                 });
                 return;
-            }
-            if (snapshot.val().gender.toUpperCase() == "F") {
-                userdata["capacity_women"] = {
-                    value: 0,
-                    type: "biggerThan"
+            } else {
+                var keys = Object.keys(snapshot.val());
+                for (var i = 0; i < keys.length; i++) {
+                    if (snapshot.val()[i] != null | snapshot.val()[i] != undefined) {
+                        userdata["require_id"] = snapshot.val().require_id;
+                        userdata[keys[i]] = snapshot.val()[keys[i]];
+                    }
                 }
-                findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""), snapshot.val().firstName);
-            } else if (snapshot.val().gender.toUpperCase() == "M") {
-                userdata["capacity_men"] = {
-                    value: 0,
-                    type: "biggerThan"
+                console.log("Hello userdata: " + JSON.stringify(userdata))
+                if (snapshot.val().gender.toUpperCase() == "F") {
+                    userdata["capacity_women"] = {
+                        value: 0,
+                        type: "biggerThan"
+                    }
+                    findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""), snapshot.val().firstName);
+                } else if (snapshot.val().gender.toUpperCase() == "M") {
+                    userdata["capacity_men"] = {
+                        value: 0,
+                        type: "biggerThan"
+                    }
+                    findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""), snapshot.val().firstName);
                 }
-                findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""), snapshot.val().firstName);
             }
         }, function(errorObject) {
             if (LogErrors) {
