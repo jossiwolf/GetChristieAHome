@@ -292,10 +292,10 @@ app.get('/sms/send', function(req, res) {
 
 })
 
-var phonenumber;
+window.phonenumber = 0;
 
 app.get('/requestuber/login/:phonenumber', function(req, res) {
-  phonenumber = req.params.phonenumber;
+  window.phonenumber = req.params.phonenumber;
   res.redirect(uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback'));
 });
 
@@ -357,7 +357,7 @@ app.get('/uber/callback', function(request, response) {
             // redirect the user back to your actual app
             //response.redirect('/web/index.html');
             //response.send(access_token)
-            response.redirect('/requestuber/' + phonenumber)
+            response.redirect('/requestuber/' + window.phonenumber)
         }
     });
 });
