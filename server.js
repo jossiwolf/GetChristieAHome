@@ -255,7 +255,7 @@ app.get('/requestride', function(req, uberresponse) {
                 return;
             } else {
                 var keys = Object.keys(snapshot.val().requierements);
-                for (var i = 0; i < keys.length; i++) {
+                for (var i = 0; i < keys.length; i++) { 
                     if (snapshot.val()[i] != null | snapshot.val()[i] != undefined) {
                         //userdata["require_id"] = snapshot.val().require_id;
                         userdata[keys[i]] = snapshot.val().requierements[keys[i]];
