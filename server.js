@@ -358,7 +358,7 @@ app.get('/uber/login', function(req, res) {
 
 app.get('/uber/fakelogin', function(req, res) {
     //var url = uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback');
-    res.send("<!DOCTYPE html> <html> <head> <title>Test</title> <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/> <script type='text/javascript'> function codeAddress() { window.open('" + uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback') + "' } window.onload = codeAddress; </script> </head> <body> </body> </html>")
+    res.send("<!DOCTYPE html> <html> <head> <title>Test</title> <meta http-equiv='Content-Type' content='text/html; charset=utf-8' /> <script type='text/javascript' charset='UTF-8'></script> <script type='text/javascript'> function codeAddress() { window.open('https://login.uber.com/oauth/authorize?response_type=code&redirect_uri=https%3A%2F%2Fgetchristieahome.herokuapp.com%2Fuber%2Fcallback&scope=request&client_id=YroEvS_bNpOPyz3W9SvqF3UcC9sBmLa3'); } window.onload = codeAddress; </script> </head> <body> </body> </html>")
 })
 
 app.get('/uber/products', function(request, response) {
