@@ -114,13 +114,17 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresp
             var completedcallbacks = 0
             if (shelters.length < 1) {
                 //if there are no shelter available that meet the persons requirements
+                console.log("Shelterslength<1")
                 var objkeys = Object.keys(userdata);
                 var newuserdata = {};
                 while (shelters.length < 1) {
+                  console.log("while")
                     for (var l = 0; l <= objkeys.length - 1; l++) {
                         newuserdata[objkeys[l]] = userdata[l]
                     }
+                    console.log(JSON.stringify(newuserdata))
                     shelters = meetsrequierements(snapshot, newuserdata);
+                    console.log(JSON.stringify(shelters))
                 }
             }
             for (var g = 0; g < shelters.length; g++) {
