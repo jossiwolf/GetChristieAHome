@@ -174,14 +174,35 @@ function requestUber(distances, uberresponse) {
         "product_id": uberproduct,
         "start_latitude": 38.632499,
         "start_longitude": -90.227829,
-        "end_latitude": parseInt(distances[0].latitude),
-        "end_longitude": parseInt(distances[0].longitude)
+        "end_latitude": parseFloat(distances[0].latitude),
+        "end_longitude": parseFloat(distances[0].longitude)
     }, function(err, res) {
         if (err) {
             console.error(err);
             console.log(res.body)
         } else {
             //console.log(res);
+
+            uber.requests.getCurrent(function(err, ucurrentres) {
+                if(!err) {
+                  console.log(JSON.stringify(ucurrentres))
+                  var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
+                  var authToken = '36fb064a34107f3705e8415005bee098';
+                  //require the Twilio module and create a REST client
+                  var tclient = require('twilio')(accountSid, authToken);
+                  tclient.messages.create({
+                      to: "+13142240815",
+                      from: "+16367357057 ",
+                      body: "Your ShelterRide is on the way!",
+                  }, function(err, message) {
+                      console.log(message.sid);
+                      if (!err) {
+                          res.json(message);
+                      }
+                  });
+                }
+            });
+
             uberresponse.json(res)
             console.log("Ordered Uber!")
         }
@@ -273,8 +294,8 @@ app.get('/sms/send', function(req, res) {
         body: "Your ShelterRide is on the way",
     }, function(err, message) {
         console.log(message.sid);
-        if(!err) {
-          res.json(message);
+        if (!err) {
+            res.json(message);
         }
     });
 
