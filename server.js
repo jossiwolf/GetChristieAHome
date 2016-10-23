@@ -190,52 +190,7 @@ function requestUber(distances, uberresponse, phonenumber, firstName) {
     }, function(err, message) {
         //console.log(message.sid);
         if (err) console.log(err)
-        uberresponse.json(message);
     });
-
-    /*console.log("Ordering Uber...")
-        //uberresponse.send("Hallo")
-    console.log(distances[0].latitude)
-    console.log(parseFloat(distances[0].latitude))
-    var end_lat = parseFloat(distances[0].latitude);
-    var end_long = parseFloat(distances[0].longitude);
-    uber.requests.create({
-        "product_id": uberproduct,
-        "start_latitude": 38.632499,
-        "start_longitude": -90.227829,
-        "end_latitude": end_lat,
-        "end_longitude": end_long
-    }, function(err, res) {
-        if (err) {
-            console.error(err);
-            console.log(res.body)
-        } else {
-            //console.log(res);
-
-            /*uber.requests.getCurrent(function(err, ucurrentres) {
-                if (!err) {
-                    console.log("current uber data: " + JSON.stringify(ucurrentres))
-                    var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
-                    var authToken = '36fb064a34107f3705e8415005bee098';
-                    //require the Twilio module and create a REST client
-                    var tclient = require('twilio')(accountSid, authToken);
-                    console.log("Tclient: " + phonenumber)
-                    tclient.messages.create({
-                        to: "+" + phonenumber, //"+13142240815",
-                        from: "+16367357057",
-                        body: "Your ShelterRide will arrive in about " + ucurrentres.pickup.eta + "mins",
-                    }, function(err, message) {
-                        //console.log(message.sid);
-                        if(err) console.log(err)
-                        uberresponse.json(message);
-                    });
-                }
-            });
-
-    //uberresponse.json(res)
-    console.log("Ordered Uber!")
-}
-}); */
 }
 
 function meetsrequierements(snapshot, userdata) {
