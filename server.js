@@ -296,7 +296,7 @@ app.get('/sms/send', function(req, res) {
 
 GLOBAL.phonenumber = 0;
 
-app.post('/requestuber/login/:phonenumber', function(req, res) {
+app.get('/requestuber/login/:phonenumber', function(req, res) {
   GLOBAL.phonenumber = req.params.phonenumber;
   res.redirect(uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback'));
 });
