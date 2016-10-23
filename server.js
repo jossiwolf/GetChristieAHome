@@ -256,11 +256,10 @@ app.get('/requestride', function(req, uberresponse) {
             } else {
                 var keys = Object.keys(snapshot.val().requirements);
                 console.log(JSON.stringify(keys));
-                for (var i = 0; i < keys.length; i++) {
-                    if (snapshot.val()[i] != null | snapshot.val()[i] != undefined) {
-                        //userdata["require_id"] = snapshot.val().require_id;
-                        userdata[keys[i]] = snapshot.val().requirements[keys[i]];
-                    }
+                for (var i = 0; i <= keys.length; i++) {
+                    console.log(keys[i])
+                    console.log(snapshot.val().requirements[keys[i]])
+                    userdata[keys[i]] = snapshot.val().requirements[keys[i]];
                 }
                 console.log("Hello userdata: " + JSON.stringify(userdata))
                 if (snapshot.val().gender.toUpperCase() == "F") {
