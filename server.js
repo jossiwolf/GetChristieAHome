@@ -171,6 +171,7 @@ function requestUber(distances, uberresponse) {
     console.log("Ordering Uber...")
         //uberresponse.send("Hallo")
     console.log(distances[0].latitude)
+    console.log(parseFloat(distances[0].latitude))
     uber.requests.create({
         "product_id": uberproduct,
         "start_latitude": 38.632499,
