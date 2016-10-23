@@ -117,7 +117,7 @@ function sortByKey(array, key) {
     });
 }
 
-function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresponse, phonenumber) {
+function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresponse, phonenumber, firstName) {
     getSurroundingSheltersForUser(function(snapshot) {
 
         jsonfile.writeFile('data.json', snapshot.val(), function(err) {
@@ -161,7 +161,7 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresp
 
         //preparedistancesarray(requestUber(distances));
         preparedistancesarray(function(distances) {
-            requestUber(distances, uberresponse, phonenumber)
+            requestUber(distances, uberresponse, phonenumber, firstName)
         })
 
 
@@ -174,7 +174,7 @@ function returnbestshelter(data) {
     return data;
 }
 
-function requestUber(distances, uberresponse, phonenumber) {
+function requestUber(distances, uberresponse, phonenumber, firstName) {
     sortByKey(distances, 'exactdistance')
     console.log("Best shelter for given requirements: " + distances[0].agency_program_name + ". Distance: " + distances[0].exactdistance + "m");
 
@@ -186,7 +186,7 @@ function requestUber(distances, uberresponse, phonenumber) {
     tclient.messages.create({
         to: "+" + phonenumber, //"+13142240815",
         from: "+16367357057",
-        body: "Your ShelterRide is on the way! ",
+        body: "Hey " + firstName + "! Your ShelterRide is on the way! ",
     }, function(err, message) {
         //console.log(message.sid);
         if (err) console.log(err)
@@ -310,7 +310,7 @@ app.get('/sms/send', function(req, res) {
         //to: "+13142240815",
         to: "+13142240815",
         from: "+16367357057 ",
-        body: "Your ShelterRide is on the way",
+        body: "Hey " +  + "your ShelterRide is on the way",
     }, function(err, message) {
         console.log(message.sid);
         if (!err) {
@@ -380,13 +380,13 @@ app.get('/requestride', function(req, uberresponse) {
                 value: 0,
                 type: "biggerThan"
             }
-            findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""));
+            findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""), snapshot.val().firstName);
         } else if (snapshot.val().gender.toUpperCase() == "M") {
             userdata["capacity_men"] = {
                 value: 0,
                 type: "biggerThan"
             }
-            findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""));
+            findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""), snapshot.val().firstName);
         }
     }, function(errorObject) {
         if (LogErrors) {
