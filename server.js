@@ -100,7 +100,7 @@ function getDistanceToShelter(start, end) {
     }, start, end);
 }
 
-function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresponse, phonenumber, firstName) {
+function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresponse, phonenumber, firstName, location) {
     getSurroundingSheltersForUser(function(snapshot) {
 
         shelters = meetsrequierements(snapshot, userdata);
@@ -161,7 +161,7 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresp
                     if (completedcallbacks == shelters.length) {
                         newcallback(distances);
                     }
-                }, "38.632499, -90.227829", shelters[g].agency_address, g);
+                }, location, shelters[g].agency_address, g);
             }
         }
         preparedistancesarray(function(distances) {
@@ -191,6 +191,11 @@ function requestUber(distances, uberresponse, phonenumber, firstName) {
     }, function(err, message) {
         //console.log(message.sid);
         if (err) console.log(err)
+        if (!err) {
+            firebaseapp.auth().signInWithEmailAndPassword(email, password).then(function() {
+              firebaseapp.database().ref("shelters/")
+            })
+        }
     });
 }
 
@@ -289,13 +294,13 @@ app.get('/requestride', function(req, uberresponse) {
                         value: 0,
                         type: "biggerThan"
                     }*/
-                    findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""), snapshot.val().firstName);
+                    findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""), snapshot.val().firstName, snapshot.val().location);
                 } else if (snapshot.val().gender.toUpperCase() == "M") {
                     /*userdata["capacity_men"] = {
                         value: 0,
                         type: "biggerThan"
                     }*/
-                    findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""), snapshot.val().firstName);
+                    findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""), snapshot.val().firstName, snapshot.val().location);
                 }
             }
         }, function(errorObject) {
