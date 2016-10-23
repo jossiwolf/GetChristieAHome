@@ -265,9 +265,9 @@ app.get('/sms/send', function(req, res) {
     var authToken = '36fb064a34107f3705e8415005bee098';
 
     //require the Twilio module and create a REST client
-    var client = require('twilio')(accountSid, authToken);
+    var tclient = require('twilio')(accountSid, authToken);
 
-    client.messages.create({
+    tclient.messages.create({
         to: "+13142240815",
         from: "+16367357057 ",
         body: "Your Uber is on the way",
