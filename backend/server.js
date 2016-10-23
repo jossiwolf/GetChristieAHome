@@ -213,15 +213,11 @@ ref.on("value", function(snapshot) {
 });
 app.get("/shelters/:state/:city", function(req, res) {
     getSurroundingShelters(function(snapshot) {
-        /*console.log("Callback: " + snapshot.val()[1].agency_address)
-        console.log("Callback: " + JSON.stringify(snapshot.val()));*/
         res.json(snapshot.val());
     }, req.params.state, req.params.city)
 });
-app.get("/shelters_kml/:state/:city", function(req, res) {
+app.get("/shelters/:state/:city.kml", function(req, res) {
   getSurroundingShelters(function(snapshot) {
-    /*console.log("Callback: " + snapshot.val()[1].agency_address)
-    console.log("Callback: " + JSON.stringify(snapshot.val()));*/
     res.json(coverter.genKML(snapshot.val()));
   }, req.params.state, req.params.city)
 });
