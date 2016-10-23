@@ -195,6 +195,7 @@ function requestUber(distances, uberresponse, phonenumber) {
                     var authToken = '36fb064a34107f3705e8415005bee098';
                     //require the Twilio module and create a REST client
                     var tclient = require('twilio')(accountSid, authToken);
+                    console.log("Tclient: " + phonenumber)
                     tclient.messages.create({
                         to: "+" + phonenumber, //"+13142240815",
                         from: "+16367357057",
