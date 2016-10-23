@@ -131,7 +131,18 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresp
                   shelters = meetsrequierements(snapshot, newuserdata);
                   console.log(JSON.stringify(shelters))
                 }*/
-                shelters = meetsrequierements(snapshot, {});
+
+                function doStuff(i) {
+                    delete userdata[Object.keys(userdata)[i]];
+                }
+                var p = 0;
+                doStuff(p);
+                p++
+                shelters = meetsrequierements(snapshot, userdata);
+                if(shelters.length<1) {
+                  doStuff(p)
+                  p++
+                }
                 console.log(JSON.stringify(shelters))
             }
             for (var g = 0; g < shelters.length; g++) {
