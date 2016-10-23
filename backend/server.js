@@ -11,6 +11,7 @@ var lodash = require('lodash');
 var sql = require('mssql');
 var GoogleMapsAPI = require('googlemaps');
 var jsonfile = require('jsonfile');
+var Uber = require('node-uber');
 const coverter = require('./kmlConverter.js');
 
 app.use(morgan('dev')); // log every request to the console
@@ -30,6 +31,15 @@ app.use(allowCrossDomain);
 Array.min = function(array) {
     return Math.min.apply(Math, array);
 };
+
+var uber = new Uber({
+    client_id: 'YroEvS_bNpOPyz3W9SvqF3UcC9sBmLa3',
+    client_secret: 'IZeYd38VexEvw_a6Mtivd2MfOvPh6goK-NxYLbBp',
+    server_token: 'HY2MtwwMSd0a60X6EB4laJqVtLI1aS5sKYgZjdAP',
+    redirect_uri: 'http://localhost:8080/uber/callback',
+    name: 'GetChristieAHome',
+    sandbox: true // optional, defaults to false
+});
 
 var firebaseapp = firebase.initializeApp({
     apiKey: ' AIzaSyAlfkqy1BWgPqMaeWVG3khQDpjiSbDhhbs',
@@ -217,10 +227,10 @@ app.get("/shelters/:state/:city.json", function(req, res) {
     }, req.params.state, req.params.city)
 });
 app.get("/shelters/:state/:city.kml", function(req, res) {
-  console.log(req.params.city)
-  getSurroundingShelters(function(snapshot) {
-    res.json(coverter.genKML(snapshot.val()));
-  }, req.params.state, req.params.city)
+    console.log(req.params.city)
+    getSurroundingShelters(function(snapshot) {
+        res.json(coverter.genKML(snapshot.val()));
+    }, req.params.state, req.params.city)
 });
 
 app.post('/requestuber/:clientuuid', function(req, res) {
@@ -229,6 +239,25 @@ app.post('/requestuber/:clientuuid', function(req, res) {
     res.json({
         "test": req.params.clientuuid
     });
+});
+
+app.get('/uber/callback', function(request, response) {
+    uber.authorization({
+      authorization_code: request.query.code
+    }, function(err, access_token, refresh_token) {
+      if (err) {
+        console.error(err);
+      } else {
+        // store the user id and associated access token
+        // redirect the user back to your actual app
+        //response.redirect('/web/index.html');
+        response.send(access_token)
+      }
+    });
+});
+
+app.get('/uber/login', function(req, res) {
+    res.redirect(uber.getAuthorizeUrl(['request'], 'http://localhost:8080/uber/callback'));
 });
 
 app.listen(8080);
