@@ -283,6 +283,8 @@ ref.on("value", function(snapshot) {
         console.log("getSnapshotFromDatabase error: " + errorObject.code);
     }
 });
+
+
 app.get("/shelters/:state/:city.json", function(req, res) {
     getSurroundingShelters(function(snapshot) {
         res.json(snapshot.val());
@@ -320,6 +322,10 @@ app.get('/sms/send', function(req, res) {
 
 GLOBAL.phonenumber = 0;
 
+function getRandom(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
 app.get('/requestride/login/:phonenumber', function(req, res) {
     GLOBAL.phonenumber = req.params.phonenumber;
     //res.redirect(uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback'));
@@ -327,7 +333,9 @@ app.get('/requestride/login/:phonenumber', function(req, res) {
 });
 
 app.get('/requestride/:phonenumber', function(req, uberresponse) {
-  
+
+    console.log("Query data: " + req.query.From);
+
     var exampleuserdata = {
         require_id: "no",
         gender: 0,
@@ -338,7 +346,22 @@ app.get('/requestride/:phonenumber', function(req, uberresponse) {
         }
     }
 
-    findBestShelterAvailableBasedOnUserData(exampleuserdata, "stlouis", "mo", uberresponse, req.params.phonenumber);
+    var userdata = {}
+
+    var ref = firebaseapp.database().ref("newclients/" + req.params.phonenumber);
+    ref.on("value", function(snapshot) {
+        //snapshot.val()[getRandom(0, snapshot.val().length)].firstName;
+        if(snapshot.val().gender.toUpperCase() == "F") {
+            userdata["capacity_women"] = {value: 0, type: "biggerThan"}
+        } else if (snapshot.val().gender.toUpperCase() == "M") {
+            userdata["capacity_men"] = {value: 0, type: "biggerThan"}
+        }
+        findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.params.phonenumber);
+    }, function(errorObject) {
+        if (LogErrors) {
+            console.log("getSnapshotFromDatabase error: " + errorObject.code);
+        }
+    });
 
 
     /*databaseref = firebaseapp.database().ref("shelters/" + state + "/" + city);
