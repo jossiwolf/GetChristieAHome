@@ -133,6 +133,14 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresp
         var preparedistancesarray = function(newcallback) {
             var distances = [];
             var completedcallbacks = 0
+            if (shelters.length < 1) {
+                shelters = meetsrequierements(snapshot, {
+                    capacity: {
+                        value: 0,
+                        type: "biggerThan"
+                    }
+                })
+            }
             for (var g = 0; g < shelters.length; g++) {
                 console.log("g before callback: " + g)
                 console.log("shelters.length" + shelters.length)
@@ -168,8 +176,24 @@ function returnbestshelter(data) {
 
 function requestUber(distances, uberresponse, phonenumber) {
     sortByKey(distances, 'exactdistance')
-    console.log("Best shelter for given requirements: " + distances[0].agency_program_name + ". Distance: " + distances[0].exactdistance + "km");
-    console.log("Ordering Uber...")
+    console.log("Best shelter for given requirements: " + distances[0].agency_program_name + ". Distance: " + distances[0].exactdistance + "m");
+
+    var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
+    var authToken = '36fb064a34107f3705e8415005bee098';
+    //require the Twilio module and create a REST client
+    var tclient = require('twilio')(accountSid, authToken);
+    console.log("Tclient: " + phonenumber)
+    tclient.messages.create({
+        to: "+" + phonenumber, //"+13142240815",
+        from: "+16367357057",
+        body: "Your ShelterRide is on the way! ",
+    }, function(err, message) {
+        //console.log(message.sid);
+        if (err) console.log(err)
+        uberresponse.json(message);
+    });
+
+    /*console.log("Ordering Uber...")
         //uberresponse.send("Hallo")
     console.log(distances[0].latitude)
     console.log(parseFloat(distances[0].latitude))
@@ -187,22 +211,6 @@ function requestUber(distances, uberresponse, phonenumber) {
             console.log(res.body)
         } else {
             //console.log(res);
-
-
-            var accountSid = 'AC0472f48b5bc8d5a9729a5e1e567bccc7';
-            var authToken = '36fb064a34107f3705e8415005bee098';
-            //require the Twilio module and create a REST client
-            var tclient = require('twilio')(accountSid, authToken);
-            console.log("Tclient: " + phonenumber)
-            tclient.messages.create({
-                to: "+" + phonenumber, //"+13142240815",
-                from: "+16367357057",
-                body: "Your ShelterRide will arrive in about " + ucurrentres.pickup.eta + "mins",
-            }, function(err, message) {
-                //console.log(message.sid);
-                if (err) console.log(err)
-                uberresponse.json(message);
-            });
 
             /*uber.requests.getCurrent(function(err, ucurrentres) {
                 if (!err) {
@@ -222,12 +230,12 @@ function requestUber(distances, uberresponse, phonenumber) {
                         uberresponse.json(message);
                     });
                 }
-            });*/
+            });
 
-            //uberresponse.json(res)
-            console.log("Ordered Uber!")
-        }
-    });
+    //uberresponse.json(res)
+    console.log("Ordered Uber!")
+}
+}); */
 }
 
 function meetsrequierements(snapshot, userdata) {
@@ -312,16 +320,14 @@ app.get('/sms/send', function(req, res) {
 
 GLOBAL.phonenumber = 0;
 
-app.get('/requestuber/login/:phonenumber', function(req, res) {
+app.get('/requestride/login/:phonenumber', function(req, res) {
     GLOBAL.phonenumber = req.params.phonenumber;
     //res.redirect(uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback'));
     res.send("<iframe src=" + uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback') + "></iframe>");
 });
 
-app.get('/requestuber/:phonenumber', function(req, uberresponse) {
-
-    console.log("THE REAL WAR ZONE BEGINS HERE: " + req.params.phonenumber)
-
+app.get('/requestride/:phonenumber', function(req, uberresponse) {
+  
     var exampleuserdata = {
         require_id: "no",
         gender: 0,
