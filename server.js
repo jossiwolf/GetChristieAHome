@@ -200,9 +200,6 @@ function requestUber(distances, uberresponse, phonenumber) {
                         body: "Your ShelterRide is on the way!",
                     }, function(err, message) {
                         console.log(message.sid);
-                        if (!err) {
-                            res.json(message);
-                        }
                     });
                 }
             });
