@@ -170,6 +170,7 @@ function requestUber(distances, uberresponse) {
     console.log("Best shelter for given requirements: " + distances[0].agency_program_name + ". Distance: " + distances[0].exactdistance + "km");
     console.log("Ordering Uber...")
         //uberresponse.send("Hallo")
+    console.log(distances[0].latitude)
     uber.requests.create({
         "product_id": uberproduct,
         "start_latitude": 38.632499,
