@@ -360,13 +360,13 @@ app.get('/requestride', function(req, uberresponse) {
                 value: 0,
                 type: "biggerThan"
             }
-            findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+1", ""));
+            findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""));
         } else if (snapshot.val().gender.toUpperCase() == "M") {
             userdata["capacity_men"] = {
                 value: 0,
                 type: "biggerThan"
             }
-            findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+1", ""));
+            findBestShelterAvailableBasedOnUserData(userdata, "stlouis", "mo", uberresponse, req.query.From.replace("+", ""));
         }
     }, function(errorObject) {
         if (LogErrors) {
