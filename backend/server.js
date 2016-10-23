@@ -94,15 +94,10 @@ function getDistanceToShelter(start, end) {
     }, start, end);
 }
 
-
-var exampleuserdata = {
-    require_id: "no",
-    other_elig_requirement: "none"
-}
-
 function sortByKey(array, key) {
     return array.sort(function(a, b) {
-        var x = a[key]; var y = b[key];
+        var x = a[key];
+        var y = b[key];
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
 }
@@ -124,8 +119,8 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state) {
             var distances = [];
             var completedcallbacks = 0
             for (var g = 0; g < shelters.length; g++) {
-              console.log("g before callback: " + g)
-              console.log("shelters.length" + shelters.length)
+                console.log("g before callback: " + g)
+                console.log("shelters.length" + shelters.length)
                 getDistanceToPoint(function(distance, g) {
                     completedcallbacks += 1;
                     console.log("completedcallbacks: " + completedcallbacks)
@@ -144,7 +139,7 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state) {
             sortByKey(distances, 'exactdistance')
             console.log("HELLO")
             console.log(distances)
-            console.log("Best shelter for given requirements: " + distances[0].agency_program_name);
+            console.log("Best shelter for given requirements: " + distances[0].agency_program_name) + ". Distance: " + distances[0].exactdistance + "km";
         })
 
 
@@ -154,7 +149,7 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state) {
 }
 
 function returnbestshelter(data) {
-  return data;
+    return data;
 }
 
 function meetsrequierements(snapshot, userdata) {
@@ -166,13 +161,36 @@ function meetsrequierements(snapshot, userdata) {
         var shelter = snapshot.val()[j];
         dbsearch = {};
         for (var k = 0; k < objkeys.length; k++) {
-            if (shelter[objkeys[k]] == userdata[objkeys[k]]) counter++;
+            if (typeof userdata[objkeys[k]] === 'object') {
+                switch (userdata[objkeys[k]].type) {
+                    case 'biggerThan':
+                        if (shelter[objkeys[k]] < userdata[objkeys[k]].value) counter++;
+                    case 'biggerEqualThan':
+                        if (shelter[objkeys[k]] <= userdata[objkeys[k]].value) counter++;
+                    case 'smallerThan':
+                        if (shelter[objkeys[k]] > userdata[objkeys[k]].value) counter++;
+                    case 'smallerEqualThan':
+                        if (shelter[objkeys[k]] >= userdata[objkeys[k]].value) counter++;
+                }
+            } else if (typeof userdata[objkeys[k]] === 'string' | typeof userdata[objkeys[k]] === 'number') {
+                if (shelter[objkeys[k]] == userdata[objkeys[k]]) counter++;
+            }
         }
         if (counter == objkeys.length) {
             shelters.push(shelter);
         }
     }
     return shelters;
+}
+
+var exampleuserdata = {
+    require_id: "no",
+    gender: 0,
+    other_elig_requirement: "none",
+    capacity: {
+        value: 0,
+        type: "biggerThan"
+    }
 }
 
 findBestShelterAvailableBasedOnUserData(exampleuserdata, "stlouis", "mo");
