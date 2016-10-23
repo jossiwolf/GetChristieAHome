@@ -356,6 +356,11 @@ app.get('/uber/login', function(req, res) {
         //res.redirect(uber.getAuthorizeUrl(['request'], req.get('host') + '/uber/callback'));
 });
 
+app.get('/uber/fakelogin', function(req, res) {
+  //var url = uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback');
+  res.send("<script>windows.open(uber.getAuthorizeUrl(['request'], 'https://getchristieahome.herokuapp.com/uber/callback'))")
+})
+
 app.get('/uber/products', function(request, response) {
     // extract the query from the request URL
     uber.products.getAllForLocation(38.632499, -90.227829, function(err, res) {
