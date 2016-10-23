@@ -129,9 +129,11 @@ function findBestShelterAvailableBasedOnUserData(userdata, city, state, uberresp
                   console.log(JSON.stringify(shelters))
                 }*/
 
+                keys = Object.keys(userdata);
+
                 function doStuff(i) {
                     console.log("Userdata before:" + JSON.stringify(userdata))
-                    delete userdata[Object.keys(userdata)[i]];
+                    delete userdata[keys[i]];
                     console.log("Userdata after:" + JSON.stringify(userdata))
                 }
                 var p = 0;
