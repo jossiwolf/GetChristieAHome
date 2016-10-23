@@ -197,7 +197,7 @@ function requestUber(distances, uberresponse, phonenumber) {
                     tclient.messages.create({
                         to: "+" + phonenumber,     //"+13142240815",
                         from: "+16367357057",
-                        body: "Your ShelterRide is on the way!",
+                        body: "Your ShelterRide will arrive in about " + ucurrentres.pickup.eta + "mins",
                     }, function(err, message) {
                         //console.log(message.sid);
                     });
