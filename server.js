@@ -201,6 +201,7 @@ function requestUber(distances, uberresponse, phonenumber) {
                         body: "Your ShelterRide will arrive in about " + ucurrentres.pickup.eta + "mins",
                     }, function(err, message) {
                         //console.log(message.sid);
+                        uberresponse.json(message);
                     });
                 }
             });
