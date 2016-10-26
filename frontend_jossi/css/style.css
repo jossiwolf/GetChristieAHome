@@ -1,0 +1,12 @@
+.mdl-layout__header {
+  background-color: transparent;
+}
+.mdl-textfield__input {
+  border-bottom: 1px solid black;
+}
+.mdl-textfield__label {
+  color: black;
+}
+.intakeform {
+  margin-top: 10%;
+}

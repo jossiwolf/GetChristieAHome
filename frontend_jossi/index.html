@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Angular Material style sheet -->
+    <!--<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.teal-red.min.css">
+    <link rel="stylesheet" href="https://gitcdn.xyz/repo/CreativeIT/getmdl-select/master/getmdl-select.min.css">
+    <link type="text/css" rel="stylesheet" href="css/style.css">
+</head>
+
+<body ng-app="GetChristieAHome">
+
+    <div ng-controller="IntakeController" class="tabsdemoDynamicHeight">
+        <!-- Always shows a header, even in smaller screens. -->
+        <div class="mdl-layout mdl-js-layout">
+            <!--mdl-layout--fixed-header">-->
+            <!--<header class="mdl-layout__header">
+                <div class="mdl-layout__header-row">
+                    <span class="mdl-layout-title">ShelterRide Network</span>
+                </div>
+            </header>-->
+            <main class="mdl-layout__content">
+                <div class="page-content">
+                    <!-- Your content goes here -->
+                    <center>
+                        <div class="header">
+                            <h3>Welcome to {{appname}}</h3>
+                            <h5>Please fill out the following form to register a new homeless person with the {{appname}} Network.</h5>
+                        </div>
+                        <div class="intakeform">
+                            <form action="#">
+                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <input class="mdl-textfield__input" type="text" id="firstname-text">
+                                    <label class="mdl-textfield__label" for="firstname-text">First Name</label>
+                                </div>
+                                <br>
+                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <input class="mdl-textfield__input" type="text" id="lastname-text">
+                                    <label class="mdl-textfield__label" for="lastname-text">Last Name</label>
+                                </div>
+                                <br>
+                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select">
+                                    <input class="mdl-textfield__input" id="gender-select" name="gender" value="Please Select Gender" type="text" readonly tabIndex="-1" />
+                                    <label class="mdl-textfield__label" for="gender-select">Gender</label>
+                                    <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu" for="gender-select">
+                                        <li class="mdl-menu__item" data-val="F">Female</li>
+                                        <li class="mdl-menu__item" data-val="M">Male</li>
+                                        <li class="mdl-menu__item" data-val="O">Other</li>
+                                    </ul>
+                                </div>
+                                <br>
+                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <input class="mdl-textfield__input" type="text" id="location-text">
+                                    <label class="mdl-textfield__label" for="location-text">Location where Sim card was given to homeless person</label>
+                                </div>
+                                <br>
+                                <div ng-repeat="requirement in requirements">
+                                    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="requirement{{requirement.number}}-checkbox">
+                                        <input type="checkbox" id="requirement{{requirement.number}}-checkbox" class="mdl-checkbox__input">
+                                        <span class="mdl-checkbox__label">Has valid ID</span>
+                                    </label>
+                                    <br>
+                                </div>
+                                <br>
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" ng-click="addRequirement(requirement.number)">Add requirement</button>
+                            </form>
+                        </div>
+                    </center>
+                </div>
+            </main>
+        </div>
+    </div>
+
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    <!-- Angular Material requires Angular.js Libraries -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-aria.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-messages.min.js"></script>
+    <script src="http://ngmaterial.assets.s3.amazonaws.com/svg-assets-cache.js"></script>
+
+    <!-- Angular Material Library -->
+    <!--  <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>-->
+
+    <script defer src="https://code.getmdl.io/1.2.1/material.min.js"></script>
+    <script defer src="https://gitcdn.xyz/repo/CreativeIT/getmdl-select/master/getmdl-select.min.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>
