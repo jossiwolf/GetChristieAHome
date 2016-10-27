@@ -1,0 +1,7 @@
+{
+  "name": "Shelter Ride Network",
+  "short_name": "Shelter Ride Network",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "orientation": "portrait"
+}

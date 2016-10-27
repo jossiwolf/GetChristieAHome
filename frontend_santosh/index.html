@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <title>Shelter Ride Network </title>
+    <!-- Material Design Lite -->
+    <script src="https://code.getmdl.io/1.2.1/material.min.js"></script>
+    <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.indigo-pink.min.css">
+    <!-- Material Design icon font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" type="text/css" media="screen" href="//cdn.muicss.com/mui-0.9.3/css/mui.css" />
+<script src="//cdn.muicss.com/mui-0.9.3/js/mui.js"></script>
+<style>
+  /* Add font-smoothing */
+  html,
+  body,
+  input,
+  textarea,
+  buttons {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
+  }
+</style>
+  </head>
+  <body>
+
+    <!-- Simple header with fixed tabs. -->
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
+            mdl-layout--fixed-tabs">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <div class="mdl-layout-icon"><i class="material-icons">directions_car</i></div>
+      <!--div class="mdl-layout-spacer"></div-->
+      <!-- Title -->
+      <span class="mdl-layout-title"> Shelter Ride Network </span>
+    </div>
+    <!-- Tabs -->
+    <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+      <a href="#fixed-tab-1" class="mdl-layout__tab is-active"><i class="material-icons">perm_identity</i>Client Registration</a>
+      <a href="#fixed-tab-2" class="mdl-layout__tab"><i class="material-icons">assignment</i>Shelter Intake Form</a>
+      <a href="#fixed-tab-3" class="mdl-layout__tab"><i class="material-icons">room</i>Shelter Map</a>
+    </div>
+  </header>
+  <main class="mdl-layout__content">
+    <section class="mdl-layout__tab-panel is-active" id="fixed-tab-1">
+      <div class="page-content">
+        <!-- Your content goes here -->
+        <form>
+          <legend>Client Registration Details</legend>
+          <div class="mui-textfield mui-textfield--float-label">
+            <input type="text">
+            <label>Name</label>
+          </div>
+          <div class="mui-textfield mui-textfield--float-label">
+            <input type="text">
+            <label>Address</label>
+          </div>
+          <div class="mui-textfield mui-textfield--float-label">
+            <input type="text">
+            <label>Issued Phone Number</label>
+          </div>
+          <button type="submit" class="mui-btn mui-btn--raised">Register</button>
+        </form>
+      </div>
+    </section>
+    <section class="mdl-layout__tab-panel" id="fixed-tab-2">
+      <div class="page-content"><!-- Your content goes here --></div>
+    </section>
+    <section class="mdl-layout__tab-panel" id="fixed-tab-3">
+      <div class="page-content">
+
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/3.5.2/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAlfkqy1BWgPqMaeWVG3khQDpjiSbDhhbs",
+    authDomain: "get-christie-a-home.firebaseapp.com",
+    databaseURL: "https://get-christie-a-home.firebaseio.com",
+    storageBucket: "get-christie-a-home.appspot.com",
+    messagingSenderId: "877124051079"
+  };
+  firebase.initializeApp(config);
+</script>
+  </body>
+</html>
